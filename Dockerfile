@@ -32,12 +32,12 @@ FROM python:3.9-alpine as base_image
 ################################
 # PowerShell & PSScriptAnalyzer
 ARG PWSH_VERSION='latest'
-ARG PWSH_DIRECTORY='/opt/microsoft/powershell'
+ARG PWSH_DIRECTORY='/usr/lib/microsoft/powershell'
 ARG PSSA_VERSION='latest'
 # arm-ttk
 ARG ARM_TTK_NAME='master.zip'
 ARG ARM_TTK_URI='https://github.com/Azure/arm-ttk/archive/master.zip'
-ARG ARM_TTK_DIRECTORY='/opt/microsoft'
+ARG ARM_TTK_DIRECTORY='/usr/lib/microsoft'
 # Dart Linter
 ## stable dart sdk: https://dart.dev/get-dart#release-channels
 ARG DART_VERSION='2.8.4'
@@ -85,11 +85,11 @@ RUN ln -s /usr/bin/rustup-init /usr/bin/rustup \
     && rustup toolchain install stable-x86_64-unknown-linux-musl \
     && rustup component add rustfmt --toolchain=stable-x86_64-unknown-linux-musl \
     && rustup component add clippy --toolchain=stable-x86_64-unknown-linux-musl \
-    && mv /root/.rustup /tmp/.rustup \
-    && ln -s /tmp/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/rustfmt /usr/bin/rustfmt \
-    && ln -s /tmp/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/rustc /usr/bin/rustc \
-    && ln -s /tmp/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/cargo /usr/bin/cargo \
-    && ln -s /tmp/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/cargo-clippy /usr/bin/cargo-clippy \
+    && mv /root/.rustup /usr/lib/.rustup \
+    && ln -s /usr/lib/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/rustfmt /usr/bin/rustfmt \
+    && ln -s /usr/lib/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/rustc /usr/bin/rustc \
+    && ln -s /usr/lib/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/cargo /usr/bin/cargo \
+    && ln -s /usr/lib/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin/cargo-clippy /usr/bin/cargo-clippy \
     && echo '#!/usr/bin/env bash' > /usr/bin/clippy \
     && echo 'pushd $(dirname $1)' >> /usr/bin/clippy \
     && echo 'cargo-clippy' >> /usr/bin/clippy \
@@ -287,7 +287,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repo
     && make -b install \
     && cd .. \
     && rm -r luarocks-3.3.1-super-linter/ \
-    && luarocks install luacheck
+    && luarocks install luacheck \
+    && mv /etc/R/* /usr/lib/R/etc/
 
 ################################################################################
 # Grab small clean image #######################################################
@@ -302,7 +303,7 @@ ARG BUILD_REVISION
 ARG BUILD_VERSION
 ## install alpine-pkg-glibc (glibc compatibility layer package for Alpine Linux)
 ARG GLIBC_VERSION='2.31-r0'
-ARG ARM_TTK_DIRECTORY='/opt/microsoft'
+ARG ARM_TTK_DIRECTORY='/usr/lib/microsoft'
 
 #########################################
 # Label the instance and set maintainer #
@@ -330,14 +331,15 @@ ENV BUILD_REVISION=$BUILD_REVISION
 ENV BUILD_VERSION=$BUILD_VERSION
 ENV ARM_TTK_PSD1="${ARM_TTK_DIRECTORY}/arm-ttk-master/arm-ttk/arm-ttk.psd1"
 
-##############################
-# Install Phive dependencies #
-##############################
+######################################
+# Install Phive dependencies and git #
+######################################
 RUN wget --tries=5 -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
     && wget --tries=5 -q https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && apk add --no-cache \
     bash \
     ca-certificates \
+    git git-lfs \
     glibc-${GLIBC_VERSION}.apk \
     gnupg \
     php7 php7-phar php7-json php7-mbstring php-xmlwriter \
@@ -369,10 +371,7 @@ COPY --from=base_image /usr/share/ /usr/share/
 COPY --from=base_image /usr/include/ /usr/include/
 COPY --from=base_image /lib/ /lib/
 COPY --from=base_image /bin/ /bin/
-COPY --from=base_image /opt/microsoft/ /opt/microsoft/
 COPY --from=base_image /node_modules/ /node_modules/
-COPY --from=base_image /tmp/.rustup/ /tmp/.rustup/
-COPY --from=base_image /etc/R/ /etc/R/
 
 ########################################
 # Add node packages to path and dotnet #
