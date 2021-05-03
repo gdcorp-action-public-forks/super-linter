@@ -323,22 +323,6 @@ for LANGUAGE in "${LANGUAGE_ARRAY[@]}"; do
   eval "${FILE_ARRAY_VARIABLE_NAME}=()"
 done
 
-#####################################
-# Validate we have linter installed #
-#####################################
-for LANGUAGE in "${LANGUAGE_ARRAY[@]}"; do
-  LINTER_NAME="${LINTER_NAMES_ARRAY["${LANGUAGE}"]}"
-  debug "Checking if linter with name ${LINTER_NAME} for the ${LANGUAGE} language is available..."
-
-  if ! command -v "${LINTER_NAME}" 1 &>/dev/null 2>&1; then
-    # Failed
-    fatal "Failed to find [${LINTER_NAME}] in system!"
-  else
-    # Success
-    debug "Successfully found binary for ${F[W]}[${LINTER_NAME}]${F[B]}."
-  fi
-done
-
 ################################################################################
 ########################## FUNCTIONS BELOW #####################################
 ################################################################################
@@ -848,8 +832,8 @@ LINTER_COMMANDS_ARRAY['STATES']="asl-validator --json-path"
 LINTER_COMMANDS_ARRAY['SQL']="sql-lint --config ${SQL_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['TEKTON']="tekton-lint"
 LINTER_COMMANDS_ARRAY['TERRAFORM']="tflint -c ${TERRAFORM_LINTER_RULES}"
-LINTER_COMMANDS_ARRAY['TERRAFORM_TERRASCAN']="terrascan scan -i terraform -t all -f "
-LINTER_COMMANDS_ARRAY['TERRAGRUNT']="terragrunt hclfmt --terragrunt-check --terragrunt-hclfmt-file "
+LINTER_COMMANDS_ARRAY['TERRAFORM_TERRASCAN']="terrascan scan -i terraform -t all -f"
+LINTER_COMMANDS_ARRAY['TERRAGRUNT']="terragrunt hclfmt --terragrunt-check --terragrunt-log-level error --terragrunt-hclfmt-file"
 LINTER_COMMANDS_ARRAY['TSX']="eslint --no-eslintrc -c ${TSX_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['TYPESCRIPT_ES']="eslint --no-eslintrc -c ${TYPESCRIPT_ES_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['TYPESCRIPT_STANDARD']="standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin ${TYPESCRIPT_STANDARD_LINTER_RULES}"
@@ -938,11 +922,6 @@ for LANGUAGE in "${LANGUAGE_ARRAY[@]}"; do
     LintCodebase "${LANGUAGE}" "${LINTER_NAME}" "${LINTER_COMMAND}" "${FILTER_REGEX_INCLUDE}" "${FILTER_REGEX_EXCLUDE}" "${TEST_CASE_RUN}" "${!LANGUAGE_FILE_ARRAY}"
   fi
 done
-
-###########
-# Reports #
-###########
-Reports
 
 ##########
 # Footer #
