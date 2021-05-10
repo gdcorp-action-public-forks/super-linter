@@ -18,5 +18,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: ${{ GITHUB_REPOSITORY }}/super-linter
+          repository: $GITHUB_REPOSITORY/super-linter
           tag_with_ref: true
