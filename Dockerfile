@@ -13,8 +13,8 @@ FROM mstruebing/editorconfig-checker:2.3.5 as editorconfig-checker
 FROM yoheimuta/protolint:v0.31.0 as protolint
 FROM golangci/golangci-lint:v1.39.0 as golangci-lint
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
-FROM alpine/terragrunt:0.15.2 as terragrunt
 FROM wata727/tflint:0.28.1 as tflint
+FROM alpine/terragrunt:0.15.3 as terragrunt
 FROM mvdan/shfmt:v3.2.4 as shfmt
 FROM accurics/terrascan:1.5.1 as terrascan
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
@@ -127,7 +127,7 @@ RUN pip3 install --no-cache-dir pipenv \
     && wget --tries=5 -q -O dotnet-install.sh https://dot.net/v1/dotnet-install.sh \
     && chmod +x dotnet-install.sh \
     && ./dotnet-install.sh --install-dir /usr/share/dotnet -channel Current -version latest \
-    && /usr/share/dotnet/dotnet tool install --tool-path /usr/bin dotnet-format
+    && /usr/share/dotnet/dotnet tool install --tool-path /usr/bin dotnet-format --version 5.0.211103
 
 ##############################
 # Installs Perl dependencies #

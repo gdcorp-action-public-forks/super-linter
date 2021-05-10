@@ -76,3 +76,7 @@ super-linter.report
 
 # Test reports
 test/reports
+
+# IDE
+.idea
+super-linter.iml
