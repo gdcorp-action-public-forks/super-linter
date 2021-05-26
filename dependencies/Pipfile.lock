@@ -25,20 +25,20 @@
         },
         "ansible-base": {
             "hashes": [
-                "sha256:db72ff7ab884474609956944ab1e5b220d8614b8792acec5649727eab40dc9a2"
+                "sha256:7744b68ed81de948853304b8104b63651c5d6b03571aee972c83379aa6b7de10"
             ],
-            "version": "==2.10.10rc1"
+            "version": "==2.10.10"
         },
         "ansible-lint": {
             "extras": [
                 "core"
             ],
             "hashes": [
-                "sha256:a7b42c1dd8f44d611ea960c78e03436100fdb64d54bc69f5a82c0a1d33af8f4e",
-                "sha256:e7dab22d7826ac623c7c2566e17ee5420633afc844a3a0c0db3adaaa72bc6a82"
+                "sha256:56126f63cd5171b4265f76569138e366e6cebd57f11abbd737bec91c44608391",
+                "sha256:c41f398c5a3faaab0481ec988ed42221d9f2de48da1acb06f261546349a870c0"
             ],
             "index": "pypi",
-            "version": "==5.0.10"
+            "version": "==5.0.11"
         },
         "appdirs": {
             "hashes": [
@@ -85,17 +85,17 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:1a87855123df1f18081a5fb8c1abde28d0096a03f6f3ebb06bcfb77cdffdae5e",
-                "sha256:2a5caee63d45fbdcc85e710c7f4146112f5d10b22fd0176643d2f2914cce54df"
+                "sha256:1815748c9409e6d9a13a88a4f59c49d42c5d873a116c95ef18092ed3bd20b1c5",
+                "sha256:ccc2c2e412d31b9e542c525764c059f7523cf5268b0ce3c5b244f4df29367d9c"
             ],
-            "version": "==1.17.78"
+            "version": "==1.17.79"
         },
         "botocore": {
             "hashes": [
-                "sha256:37105b9434d73f9c4d4960ee54c8eb129120f4c6681eb16edf483f03c5e2326d",
-                "sha256:e74775f9e64e975787d76390fc5ac5aba875d726bb9ece3b7bd900205b430389"
+                "sha256:7518c3f028123f2c770cf1e568f24877259e0ec03badef657174fa93392a9e6a",
+                "sha256:b69c96f210a79f544c6dea923f708873121c174b8b4d72babd725328bf53e3d2"
             ],
-            "version": "==1.20.78"
+            "version": "==1.20.79"
         },
         "bracex": {
             "hashes": [
@@ -834,10 +834,10 @@
         },
         "smart-open": {
             "hashes": [
-                "sha256:02e5e02207d955a1f9fd924c37900ac272536bd24393ae731b6945d4f766015f",
-                "sha256:ed310ac51a797051b42f9437a566ac8149a3abf8c80ab994a8bd92d96fb7cf44"
+                "sha256:2059b07f530c8c9e2158e4e1575309aacb74bd813da2325c1f348015d04f3bd6",
+                "sha256:e4dc1350b240ef0759e343e4e2f361bfd4e5477bb2619866e97f80240652e92e"
             ],
-            "version": "==5.0.0"
+            "version": "==5.1.0"
         },
         "smmap": {
             "hashes": [
