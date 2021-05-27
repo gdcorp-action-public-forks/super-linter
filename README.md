@@ -172,7 +172,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v3
+        uses: github/super-linter@v4
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
@@ -231,6 +231,7 @@ The slim `github/super-linter:slim-v4` comes with all supported linters but remo
 - `dotenv` linters
 - `armttk` linters
 - `pwsh` linters
+- `c#` linters
 By removing these linters, we were able to bring the image size down by `2gb` and drastically speed up the build and download time.
 The behavior will be the same for non-supported languages, and will skip languages at run time.
 Example usage:
@@ -239,7 +240,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: ghcr.io://github/super-linter@slim-v4
+  uses: docker://ghcr.io/github/super-linter:slim-v4
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -426,7 +427,7 @@ Once found, it will load the certificate contents to a file, and to the trust st
 - Example workflow:
 ```yml
 - name: Lint Code Base
-  uses: github/super-linter@v3
+  uses: github/super-linter@v4
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}
