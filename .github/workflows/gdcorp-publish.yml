@@ -16,6 +16,6 @@ jobs:
         run: 
           # new login with new container registry url and PAT
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker pull ghcr.io/github/gdcorp-action-public-forks:latest
-          docker build . --tag ghcr.io/github/gdcorp-action-public-forks:$GITHUB_SHA --cache-from ghcr.io/github/gdcorp-action-public-forks:latest
-          docker push ghcr.io/github/gdcorp-action-public-forks:$GITHUB_SHA
+          docker pull ghcr.io/gdcorp-action-public-forks:latest
+          docker build . --tag ghcr.io/gdcorp-action-public-forks:$GITHUB_SHA --cache-from ghcr.io/gdcorp-action-public-forks:latest
+          docker push ghcr.io/gdcorp-action-public-forks/super-linter:$GITHUB_SHA
