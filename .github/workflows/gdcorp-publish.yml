@@ -1,7 +1,7 @@
 name: GDCorp Publish Docker image
 on:
   release:
-    types: [published]
+    types: [ published ]
 jobs:
   push_to_registry:
     name: Push Docker image to GitHub Packages
@@ -12,11 +12,10 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@HEAD
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v2.5.0
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: gdcorp-action-public-forks/super-linter/super-linter
-          tag_with_ref: true
+      - name: Build and publish
+        run: 
+          # new login with new container registry url and PAT
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker pull ghcr.io/github/gdcorp-action-public-forks:latest
+          docker build . --tag ghcr.io/github/gdcorp-action-public-forks:$GITHUB_SHA --cache-from ghcr.io/github/gdcorp-action-public-forks:latest
+          docker push ghcr.io/github/gdcorp-action-public-forks:$GITHUB_SHA
