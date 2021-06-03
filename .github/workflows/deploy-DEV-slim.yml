@@ -122,17 +122,17 @@ jobs:
         run: |
           make IMAGE=slim test
 
-      ##########################
-      # Codacy Coverage Report #
-      ##########################
-      - name: Upload the code coverage report
-        uses: codacy/codacy-coverage-reporter-action@1.0.1
-        # Dependabot does not have priv to see the secret, so will
-        # fail opn bump jobs...
-        continue-on-error: true
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: test/reports/cobertura/runTests.sh/cobertura.xml
+#      ##########################
+#      # Codacy Coverage Report #
+#      ##########################
+#      - name: Upload the code coverage report
+#        uses: codacy/codacy-coverage-reporter-action@1.0.1
+#        # Dependabot does not have priv to see the secret, so will
+#        # fail opn bump jobs...
+#        continue-on-error: true
+#        with:
+#          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+#          coverage-reports: test/reports/cobertura/runTests.sh/cobertura.xml
 
       #####################################
       # Run Linter against Test code base #
@@ -168,4 +168,4 @@ jobs:
           -e ACTIONS_RUNNER_DEBUG=true \
           -e ERROR_ON_MISSING_EXEC_BIT=true \
           -v ${GITHUB_WORKSPACE}:/tmp/lint \
-          ghcr.io/github/super-linter:slim-${GITHUB_SHA}
+          ghcr.io/gdcorp-action-public-forks/super-linter:slim-${GITHUB_SHA}
