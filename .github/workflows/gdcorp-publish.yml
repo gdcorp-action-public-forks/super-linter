@@ -17,9 +17,9 @@ jobs:
         run:
           # new login with new container registry url and PAT
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-      - name: Pull latest from GHCR
-        run:
-          docker pull ghcr.io/gdcorp-action-public-forks:latest
+#       - name: Pull latest from GHCR
+#         run:
+#           docker pull ghcr.io/gdcorp-action-public-forks:latest
       - name: Build container image
         run:
           docker build --tag ghcr.io/gdcorp-action-public-forks/super-linter:latest --cache-from ghcr.io/gdcorp-action-public-forks/super-linter:latest .
