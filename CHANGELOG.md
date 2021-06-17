@@ -17,45 +17,17 @@ All notable changes to this project will be documented in this file.
 
 * Automated release workflow
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
 ## [gdcorp-4.04] - 2021-06-16
 
 ### Added
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+* something
 
 ## [gdcorp-4.02] - 2021-05-31
 
 ### Added
 
 * Initial release
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 
 ## Attribution
 
