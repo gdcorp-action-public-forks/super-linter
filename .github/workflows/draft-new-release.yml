@@ -12,13 +12,13 @@ jobs:
     name: "Draft a new release"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@HEAD
 
       - name: Create release branch
         run: git checkout -b release/${{ github.event.inputs.version }}
 
       - name: Update changelog
-        uses: gdcorp-action-public-forks/keep-a-changelog-new-release@1.1.0
+        uses: gdcorp-action-public-forks/keep-a-changelog-new-release@HEAD
         with:
           version: ${{ github.event.inputs.version }}
 
@@ -46,7 +46,7 @@ jobs:
         run: git push origin release/${{ github.event.inputs.version }}
 
       - name: Create pull request
-        uses: gdcorp-action-public-forks/create-pull-request@1.0.0
+        uses: gdcorp-action-public-forks/create-pull-request@HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
