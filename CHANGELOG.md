@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 * Fixed - for any bug fixes.
 * Security - in case of vulnerabilities.
 
-## [unreleased]
+## [Unreleased]
 
 ### Added
 
@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-## [gdcorp-4.04]
+## [gdcorp-4.04] - 2021-06-16
 
 ### Added
 
@@ -41,7 +41,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-## [gdcorp-4.02]
+## [gdcorp-4.02] - 2021-05-31
 
 ### Added
 
@@ -61,6 +61,6 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-[unreleased]: https://github.com/gdcorp-action-public-forks/super-linter/compare/.gdcorp-4.04...HEAD
+[Unreleased]: https://github.com/gdcorp-action-public-forks/super-linter/compare/.gdcorp-4.04...HEAD
 [gdcorp-4.04]: https://github.com/gdcorp-action-public-forks/super-linter/compare/gdcorp-4.02...gdcorp-4.04
 [gdcorp-4.02]: https://github.com/gdcorp-action-public-forks/super-linter/releases/tag/gdcorp-4.02
