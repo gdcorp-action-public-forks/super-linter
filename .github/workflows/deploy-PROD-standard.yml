@@ -29,7 +29,7 @@ jobs:
     # Set the agent to run on
     runs-on: ubuntu-latest
     # Only run this on the main repo
-    if: github.repository == 'github/super-linter'
+    if: github.repository == 'gdcorp-action-public-forks/super-linter'
     ##################
     # Load all steps #
     ##################
@@ -108,8 +108,8 @@ jobs:
           load: true
           push: true
           tags: |
-            github/super-linter:latest
-            ghcr.io/github/super-linter:latest
+            gdcorp-action-public-forks/super-linter:latest
+            ghcr.io/gdcorp-action-public-forks/super-linter/super-linter:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -180,4 +180,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-          env_url: https://github.com/github/super-linter
+          env_url: https://github.com/gdcorp-action-public-forks/super-linter

@@ -86,8 +86,8 @@ jobs:
           load: true
           push: false
           tags: |
-            ghcr.io/github/super-linter:slim-${{ github.sha }}
-            ghcr.io/github/super-linter:slim-test
+            ghcr.io/gdcorp-action-public-forks/super-linter:slim-${{ github.sha }}
+            ghcr.io/gdcorp-action-public-forks/super-linter:slim-test
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -179,7 +179,7 @@ jobs:
           -e ACTIONS_RUNNER_DEBUG=true \
           -e ERROR_ON_MISSING_EXEC_BIT=true \
           -v ${GITHUB_WORKSPACE}:/tmp/lint \
-          ghcr.io/github/super-linter:slim-${GITHUB_SHA}
+          ghcr.io/gdcorp-action-public-forks/super-linter:slim-${GITHUB_SHA}
 
       #########################################
       # Clean code base to run against it all #

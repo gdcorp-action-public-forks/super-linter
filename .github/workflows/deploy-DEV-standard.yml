@@ -86,8 +86,8 @@ jobs:
           load: true
           push: false
           tags: |
-            ghcr.io/github/super-linter:${{ github.sha }}
-            ghcr.io/github/super-linter:test
+            ghcr.io/gdcorp-action-public-forks/super-linter:${{ github.sha }}
+            ghcr.io/gdcorp-action-public-forks/super-linter:test
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
