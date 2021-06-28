@@ -1,29 +1,29 @@
-#name: GDCorp Publish Docker image
-#on:
-#  release:
-#    types: [ published ]
-#  workflow_dispatch:
-#jobs:
-#  push_to_registry:
-#    name: Push Docker image to GitHub Packages
-#    runs-on: ubuntu-latest
-#    permissions:
-#      packages: write
-#      contents: read
-#    steps:
-#      - name: Check out the repo
-#        uses: actions/checkout@HEAD
-#      - name: Login to GHCR
-#        run:
-#          # new login with new container registry url and PAT
-#          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-##       - name: Pull latest from GHCR
-##         run:
-##           docker pull ghcr.io/gdcorp-action-public-forks:latest
-#      - name: Build container image
-#        run:
-#          docker build --tag ghcr.io/gdcorp-action-public-forks/super-linter:latest --cache-from ghcr.io/gdcorp-action-public-forks/super-linter:latest .
-#      - name: Push image to GHCR
-#        run:
-#          docker push ghcr.io/gdcorp-action-public-forks/super-linter:latest
-#
+name: GDCorp Publish Docker image
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+jobs:
+  push_to_registry:
+    name: Push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@HEAD
+      - name: Login to GHCR
+        run:
+          # new login with new container registry url and PAT
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+#       - name: Pull latest from GHCR
+#         run:
+#           docker pull ghcr.io/gdcorp-action-public-forks:latest
+      - name: Build container image
+        run:
+          docker build --tag ghcr.io/gdcorp-action-public-forks/super-linter:latest --cache-from ghcr.io/gdcorp-action-public-forks/super-linter:latest .
+      - name: Push image to GHCR
+        run:
+          docker push ghcr.io/gdcorp-action-public-forks/super-linter:latest
+
