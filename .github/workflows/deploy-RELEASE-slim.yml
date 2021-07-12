@@ -84,7 +84,7 @@ jobs:
       # Setup Docker build X #
       ########################
       - name: Setup BuildX
-        uses: docker/setup-buildx-action@v1.3.0
+        uses: docker/setup-buildx-action@v1.5.1
 
 #      ###############################
 #      # Login to DockerHub registry #
@@ -129,7 +129,7 @@ jobs:
       # Build and Push containers to registries #
       ###########################################
       - name: Build and push - SLIM
-        uses: docker/build-push-action@v2.5.0
+        uses: docker/build-push-action@v2.6.1
         with:
           context: .
           file: ./Dockerfile-slim
