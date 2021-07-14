@@ -62,6 +62,7 @@ RUN apk add --no-cache \
     krb5-libs \
     libc-dev libcurl libffi-dev libgcc \
     libintl libssl1.1 libstdc++ \
+    libjpeg-dev libpng-dev \
     libxml2-dev libxml2-utils \
     linux-headers \
     lttng-ust-dev \
