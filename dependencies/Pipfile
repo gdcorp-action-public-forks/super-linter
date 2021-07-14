@@ -7,7 +7,6 @@ verify_ssl = true
 
 [packages]
 ansible-lint = {extras = ["core"], version = "*"}
-pybind11 = "*"
 black = "*"
 cfn-lint = "*"
 cpplint = "*"

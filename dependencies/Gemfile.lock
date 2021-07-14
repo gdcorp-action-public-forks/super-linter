@@ -52,7 +52,6 @@ GEM
 
 PLATFORMS
   ruby
-  universal-java-16
 
 DEPENDENCIES
   rubocop (~> 1.13.0)
@@ -62,4 +61,4 @@ DEPENDENCIES
   rubocop-rspec (~> 2.4.0)
 
 BUNDLED WITH
-   2.2.21
+  2.2.11
