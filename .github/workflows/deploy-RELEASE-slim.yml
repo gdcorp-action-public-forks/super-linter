@@ -14,9 +14,9 @@
 # Start the job on all push to master #
 #######################################
 on:
-  # Start when a pull request is opened
-  issues:
-    types: ['opened']
+  # Start when a release is published
+  release:
+    types: ['published']
 
 ###############
 # Set the Job #
@@ -31,9 +31,10 @@ jobs:
     #####################################################################
     # Only run if Admin start job and it was the Release Issue template #
     #####################################################################
-    if: contains(github.event.issue.title, 'GD-Super-Linter Release:') &&
-        github.actor == 'mxhenry-godaddy' || github.actor == 'sjacoby-godaddy' ||
-        github.actor == 'jmink-godaddy' || github.actor == 'rfox-godaddy'
+    if: github.actor == 'admiralawkbar' || github.actor == 'jwiebalk' ||
+        github.actor == 'IAmHughes' || github.actor == 'nemchik' ||
+        github.actor == 'Hanse00' || github.actor == 'github-actions' ||
+        github.actor == 'GaboFDC' || github.actor == 'ferrarimarco'
 
     ##################
     # Load all steps #
@@ -44,24 +45,6 @@ jobs:
       ##########################
       - name: Checkout Code
         uses: actions/checkout@v2.3.4
-
-      #######################################################
-      # Create a GitHub Issue with the info from this build #
-      #######################################################
-      - name: Update GitHub Issue
-        uses: actions/github-script@v4.0.2
-        id: update-issue
-        with:
-          # https://octokit.github.io/rest.js/v18#issues-create
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: "${{ github.event.issue.number }}",
-              title: "Deploying slim Super-Linter Release to Production",
-              body: 'Currently deploying the Release...'
-            })
 
       #########################
       # Update deployment API #
@@ -86,14 +69,14 @@ jobs:
       - name: Setup BuildX
         uses: docker/setup-buildx-action@v1.5.1
 
-#      ###############################
-#      # Login to DockerHub registry #
-#      ###############################
-#      - name: Login to DockerHub
-#        uses: docker/login-action@v1.9.0
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
+      ###############################
+      # Login to DockerHub registry #
+      ###############################
+      - name: Login to DockerHub
+        uses: docker/login-action@v1.10.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       ######################################
       # Login to GitHub Container registry #
@@ -110,7 +93,7 @@ jobs:
       ###########################
       - name: Get current Release number
         run: |
-          echo "RELEASE_VERSION=$(echo "${{ github.event.issue.title }}" \
+          echo "RELEASE_VERSION=$(echo "${{ github.event.release.name }}" \
           | grep -E -o "v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+")" \
           >> ${GITHUB_ENV}
 
@@ -139,12 +122,12 @@ jobs:
             BUILD_VERSION=${{ github.sha }}
           push: true
           tags: |
-            gdcorp-action-public-forks/super-linter:slim-latest
-            gdcorp-action-public-forks/super-linter:slim-v4
-            gdcorp-action-public-forks/super-linter:slim-${{ env.RELEASE_VERSION }}
-            ghcr.io/gdcorp-action-public-forks/super-linter:slim-latest
-            ghcr.io/gdcorp-action-public-forks/super-linter:slim-v4
-            ghcr.io/gdcorp-action-public-forks/super-linter:slim-${{ env.RELEASE_VERSION }}
+            github/super-linter:slim-latest
+            github/super-linter:slim-v4
+            github/super-linter:slim-${{ env.RELEASE_VERSION }}
+            ghcr.io/github/super-linter:slim-latest
+            ghcr.io/github/super-linter:slim-v4
+            ghcr.io/github/super-linter:slim-${{ env.RELEASE_VERSION }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -170,4 +153,49 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-          env_url: https://github.com/gdcorp-action-public-forks/super-linter/releases/tag/${{ env.RELEASE_VERSION }}
+          env_url: https://github.com/github/super-linter/releases/tag/${{ env.RELEASE_VERSION }}
+
+      #######################################################
+      # Create a GitHub Issue with the info from this build #
+      #######################################################
+      - name: Create GitHub Issue for failure
+        if: failure()
+        uses: actions/github-script@v4.0.2
+        id: create-issue
+        with:
+          # https://octokit.github.io/rest.js/v18#issues-create
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const create = await github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Failed to deploy release to production",
+              body: "Automation has failed us! Failed to push release ${{ env.RELEASE_VERSION }}"
+            })
+            console.log('create', create)
+            return create.data.number
+
+      ############################
+      # Assign admins on failure #
+      ############################
+      - name: Assign Admins on failure
+        uses: actions/github-script@v4.0.2
+        if: failure()
+        with:
+          # https://octokit.github.io/rest.js/v18#issues-create
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: "${{ steps.create-issue.outputs.result }}",
+              assignees: [
+                'admiralawkbar',
+                'jwiebalk',
+                'IAmHughes',
+                'nemchik',
+                'Hanse00',
+                'GaboFDC',
+                'ferrarimarco'
+              ]
+            })

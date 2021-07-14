@@ -35,8 +35,9 @@ It is a simple combination of various linters, written in `bash`, to help valida
     - [Azure](#azure)
     - [GitLab](#gitlab)
     - [Visual Studio Code](#visual-studio-code)
-  - [Limitations](#limitations)
+    - [SSL Certs](#ssl-certs)
   - [Community Activity](#community-activity)
+  - [Limitations](#limitations)
   - [How to contribute](#how-to-contribute)
     - [License](#license)
 
@@ -71,7 +72,7 @@ Developers on **GitHub** can call the **GitHub Action** to lint their code base 
 | **HTML**                         | [HTMLHint](https://github.com/htmlhint/HTMLHint)                                                                                                                              |
 | **Java**                         | [checkstyle](https://checkstyle.org)                                                                                                                                          |
 | **JavaScript**                   | [eslint](https://eslint.org/) / [standard js](https://standardjs.com/)                                                                                                        |
-| **JSON**                         | [jsonlint](https://github.com/zaach/jsonlint)                                                                                                                                 |
+| **JSON**                         | [eslint-plugin-json](https://www.npmjs.com/package/eslint-plugin-json)                                                                                                        |
 | **JSONC**                        | [eslint-plugin-jsonc](https://www.npmjs.com/package/eslint-plugin-jsonc)                                                                                                      |
 | **Kubeval**                      | [kubeval](https://github.com/instrumenta/kubeval)                                                                                                                             |
 | **Kotlin**                       | [ktlint](https://github.com/pinterest/ktlint)                                                                                                                                 |
@@ -282,8 +283,9 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **FILTER_REGEX_INCLUDE**           | `all`                           | Regular expression defining which files will be processed by linters (ex: `.*src/.*`)                                                                                                                                |
 | **GITHUB_DOMAIN**                  | `github.com`                    | Specify a custom Github domain in case Github Enterprise is used: e.g. `github.myenterprise.com`                                                                                                                     |
 | **GITHUB_CUSTOM_API_URL**          | `api.github.com`                | Specify a custom Github API URL in case Github Enterprise is used: e.g. `https://github.myenterprise.com/api/v3/`                                                                                                    |
-| **IGNORE_GENERATED_FILES**         | `false`                          | If set to `true`, super-linter will ignore all the files with `@generated` marker but without `@not-generated` marker.                                                                                               |
+| **IGNORE_GENERATED_FILES**         | `false`                         | If set to `true`, super-linter will ignore all the files with `@generated` marker but without `@not-generated` marker.                                                                                               |
 | **IGNORE_GITIGNORED_FILES**        | `false`                         | If set to `true`, super-linter will ignore all the files that are ignored by Git.                                                                                                                                    |
+| **JAVA_FILE_NAME**                 | `sun-checks.xml`                | Filename for [Checkstyle configuration](https://checkstyle.sourceforge.io/config.html) (ex: `checkstyle.xml`)                                                                                                        |
 | **JAVASCRIPT_ES_CONFIG_FILE**      | `.eslintrc.yml`                 | Filename for [eslint configuration](https://eslint.org/docs/user-guide/configuring#configuration-file-formats) (ex: `.eslintrc.yml`, `.eslintrc.json`)                                                               |
 | **JAVASCRIPT_DEFAULT_STYLE**       | `standard`                      | Flag to set the default style of javascript. Available options: **standard**/**prettier**                                                                                                                            |
 | **JSCPD_CONFIG_FILE**              | `.jscpd.json`                   | Filename for JSCPD configuration                                                                                                                                                                                     |
@@ -305,6 +307,8 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **SNAKEMAKE_SNAKEFMT_CONFIG_FILE** | `.snakefmt.toml`                | Filename for [Snakemake configuration](https://github.com/snakemake/snakefmt#configuration) (ex: `pyproject.toml`, `.snakefmt.toml`)                                                                                 |
 | **SSL_CERT_SECRET**                | `none`                          | SSL cert to add to the **Super-Linter** trust store. This is needed for users on `self-hosted` runners or need to inject the cert for security standards (ex. ${{ secrets.SSL_CERT }})                               |
 | **SQL_CONFIG_FILE**                | `.sql-config.json`              | Filename for [SQL-Lint configuration](https://sql-lint.readthedocs.io/en/latest/files/configuration.html) (ex: `sql-config.json` , `.config.json`)                                                                   |
+| **TERRAFORM_CONFIG_FILE**          | `.tflint.hcl`                   | Filename for [tfLint configuration](https://github.com/terraform-linters/tflint) (ex: `.tflint.hcl`)                                                                                                                 |
+| **TERRAFORM_TERRASCAN_CONFIG_FILE**| `terrascan.toml`                | Filename for [terrascan configuration](https://github.com/accurics/terrascan) (ex: `terrascan.toml`) |
 | **TYPESCRIPT_ES_CONFIG_FILE**      | `.eslintrc.yml`                 | Filename for [eslint configuration](https://eslint.org/docs/user-guide/configuring#configuration-file-formats) (ex: `.eslintrc.yml`, `.eslintrc.json`)                                                               |
 | **USE_FIND_ALGORITHM**             | `false`                         | By default, we use `git diff` to find all files in the workspace and what has been updated, this would enable the Linux `find` method instead to find all files to lint                                              |
 | **VALIDATE_ALL_CODEBASE**          | `true`                          | Will parse the entire repository and find all files to validate across all types. **NOTE:** When set to `false`, only **new** or **edited** files will be parsed for validation.                                     |
