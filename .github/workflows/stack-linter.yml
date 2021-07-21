@@ -18,6 +18,7 @@ on:
     branches: [master]
   pull_request:
     branches-ignore: []
+  workflow_dispatch:
 
 ###############
 # Set the Job #
