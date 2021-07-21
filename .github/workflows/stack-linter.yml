@@ -46,7 +46,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: docker://ghcr.io/gdcorp-action-public-forks/super-linter:latest
+        uses: ghcr.io/gdcorp-action-public-forks/super-linter:latest
         env:
           ACTIONS_RUNNER_DEBUG: true
           ERROR_ON_MISSING_EXEC_BIT: true
