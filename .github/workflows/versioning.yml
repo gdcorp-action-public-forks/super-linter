@@ -21,6 +21,7 @@ name: Keep GitHub tag versions up-to-date
 on:
   release:
     types: [published, edited]
+  workflow_dispatch:
 
 #################
 # Start the job #
