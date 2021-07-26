@@ -14,9 +14,9 @@ FROM yoheimuta/protolint:v0.32.0 as protolint
 FROM golangci/golangci-lint:v1.41.1 as golangci-lint
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
 FROM ghcr.io/terraform-linters/tflint-bundle:v0.30.0 as tflint
-FROM alpine/terragrunt:1.0.1 as terragrunt
+FROM alpine/terragrunt:1.0.3 as terragrunt
 FROM mvdan/shfmt:v3.3.0 as shfmt
-FROM accurics/terrascan:1.8.0 as terrascan
+FROM accurics/terrascan:1.8.1 as terrascan
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
 FROM assignuser/chktex-alpine:v0.1.1 as chktex
 FROM garethr/kubeval:0.15.0 as kubeval
@@ -424,6 +424,7 @@ COPY --from=base_image /lib/ /lib/
 COPY --from=base_image /bin/ /bin/
 COPY --from=base_image /node_modules/ /node_modules/
 COPY --from=base_image /home/r-library /home/r-library
+COPY --from=base_image /root/.tflint.d/ /root/.tflint.d/
 COPY --from=clang-format-build /tmp/llvm-project/llvm/build/bin/clang-format /usr/bin/clang-format
 
 ########################################
