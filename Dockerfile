@@ -7,7 +7,7 @@
 #########################################
 # Get dependency images as build stages #
 #########################################
-FROM cljkondo/clj-kondo:2021.06.18-alpine as clj-kondo
+FROM cljkondo/clj-kondo:2021.07.28-alpine as clj-kondo
 FROM dotenvlinter/dotenv-linter:3.1.0 as dotenv-linter
 FROM mstruebing/editorconfig-checker:2.3.5 as editorconfig-checker
 FROM yoheimuta/protolint:v0.32.0 as protolint
@@ -15,7 +15,7 @@ FROM golangci/golangci-lint:v1.41.1 as golangci-lint
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
 FROM ghcr.io/terraform-linters/tflint-bundle:v0.30.0 as tflint
 FROM alpine/terragrunt:1.0.3 as terragrunt
-FROM mvdan/shfmt:v3.3.0 as shfmt
+FROM mvdan/shfmt:v3.3.1 as shfmt
 FROM accurics/terrascan:1.8.1 as terrascan
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
 FROM assignuser/chktex-alpine:v0.1.1 as chktex
