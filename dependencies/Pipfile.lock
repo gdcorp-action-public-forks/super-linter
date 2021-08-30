@@ -49,11 +49,11 @@
         },
         "astroid": {
             "hashes": [
-                "sha256:b6c2d75cd7c2982d09e7d41d70213e863b3ba34d3bd4014e08f167cee966e99e",
-                "sha256:ecc50f9b3803ebf8ea19aa2c6df5622d8a5c31456a53c741d3be044d96ff0948"
+                "sha256:3b680ce0419b8a771aba6190139a3998d14b413852506d99aff8dc2bf65ee67c",
+                "sha256:dc1e8b28427d6bbef6b8842b18765ab58f558c42bb80540bd7648c98412af25e"
             ],
             "markers": "python_version ~= '3.6'",
-            "version": "==2.7.2"
+            "version": "==2.7.3"
         },
         "attrs": {
             "hashes": [
@@ -872,11 +872,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:50bcad0a0b9c5a72c8e4e7c9855a3ad496ca6a881a3641b4260605450772c54b",
-                "sha256:91ef2131a9bd6be8f76f1f08eac5c5317221d6ad1e143ae03894b862e8976890"
+                "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89",
+                "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==6.2.4"
+            "version": "==6.2.5"
         },
         "python-dateutil": {
             "hashes": [
@@ -1177,12 +1177,12 @@
         },
         "typing-extensions": {
             "hashes": [
-                "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497",
-                "sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342",
-                "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"
+                "sha256:045dd532231acfa03628df5e0c66dba64e2cc8fc8b844538d4ad6d5dd6cb82dc",
+                "sha256:83af6730a045fda60f46510f7f1f094776d90321caa4d97d20ef38871bef4bd3",
+                "sha256:8bbffbd37fbeb9747a0241fdfde5ae99d4531ad1d1a41ccaea62100e15a5814c"
             ],
             "index": "pypi",
-            "version": "==3.10.0.0"
+            "version": "==3.10.0.1"
         },
         "urllib3": {
             "hashes": [
