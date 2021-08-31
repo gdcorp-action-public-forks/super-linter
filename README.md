@@ -391,7 +391,7 @@ You can use the **GitHub** **Super-Linter** _with_ or _without_ your own persona
 
 ### Using your own rules files
 
-If your repository contains your own rules files that live outside of a ``.github/linters/`` directory, you will have to tell Super-Linter where your rules files are located in your repository, and what their file names are. To learn more, see [Using your own rules files](docs/using-rules-files.md).
+If your repository contains your own rules files that live outside of a `.github/linters/` directory, you will have to tell Super-Linter where your rules files are located in your repository, and what their filenames are. To learn more, see [Using your own rules files](docs/using-rules-files.md).
 
 ### Disabling rules
 
