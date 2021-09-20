@@ -4,7 +4,7 @@ author: 'GitHub'
 description: 'It is a simple combination of various linters, written in bash, to help validate your source code.'
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/gdcorp-action-public-forks/super-linter:gdcorp-4.24'
+  image: 'docker://ghcr.io/gdcorp-action-public-forks/super-linter:latest'
 branding:
   icon: 'check-square'
   color: 'white'
