@@ -316,6 +316,8 @@ function BuildFileList() {
     FILE_ARRAY_EDITORCONFIG+=("${FILE}")
     # jscpd also runs an all files
     FILE_ARRAY_JSCPD+=("${FILE}")
+    # GitLeaks also runs an all files
+    FILE_ARRAY_GITLEAKS+=("${FILE}")
 
     #######################
     # Get the shell files #
@@ -455,6 +457,7 @@ function BuildFileList() {
       # Append the file to the array #
       ################################
       FILE_ARRAY_JAVA+=("${FILE}")
+      FILE_ARRAY_GOOGLE_JAVA_FORMAT+=("${FILE}")
 
     ############################
     # Get the JavaScript files #
@@ -575,6 +578,7 @@ function BuildFileList() {
       # Append the file to the array #
       ################################
       FILE_ARRAY_MARKDOWN+=("${FILE}")
+      FILE_ARRAY_NATURAL_LANGUAGE+=("${FILE}")
 
     ######################
     # Get the PHP files #

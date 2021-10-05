@@ -405,7 +405,7 @@ function RunAdditionalInstalls() {
     info "Found PHP files to validate, and [VALIDATE_PHP_PSALM] set to true, need to run composer install"
     info "looking for composer.json in the users repository..."
     mapfile -t COMPOSER_FILE_ARRAY < <(find / -name composer.json 2>&1)
-    debug "COMPOSER_FILE_ARRAY contents: ${COMPOSER_FILE_ARRAY[*]}"
+    debug "COMPOSER_FILE_ARRAY contents:[${COMPOSER_FILE_ARRAY[*]}]"
     ############################################
     # Check if we found the file in the system #
     ############################################
@@ -415,7 +415,7 @@ function RunAdditionalInstalls() {
         info "Found [composer.json] at:[${LINE}]"
         COMPOSER_CMD=$(
           cd "${PATH}" || exit 1
-          composer install 2>&1
+          composer install --no-progress -q 2>&1
         )
 
         ##############
@@ -435,6 +435,59 @@ function RunAdditionalInstalls() {
           info "Successfully ran:[composer install] for PHP validation"
         fi
       done
+    fi
+  fi
+
+  ###############################
+  # Run installs for R language #
+  ###############################
+  if [ "${VALIDATE_R}" == "true" ] && [ "${#FILE_ARRAY_R[@]}" -ne 0 ]; then
+    info "Detected R Language files to lint."
+    info "Trying to install the R package inside:[${WORKSPACE_PATH}]"
+    #########################
+    # Run the build command #
+    #########################
+    BUILD_CMD=$(R CMD build "${WORKSPACE_PATH}" 2>&1)
+
+    ##############
+    # Error code #
+    ##############
+    ERROR_CODE=$?
+
+    ##############################
+    # Check the shell for errors #
+    ##############################
+    if [ "${ERROR_CODE}" -ne 0 ]; then
+      # Error
+      warn "ERROR! Failed to run:[R CMD build] at location:[${WORKSPACE_PATH}]"
+      warn "BUILD_CMD:[${BUILD_CMD}]"
+    else
+      # Get the build package
+      BUILD_PKG=$(
+        cd "${WORKSPACE_PATH}" || exit 0
+        echo *.tar.gz 2>&1
+      )
+      ##############################
+      # Install the build packages #
+      ##############################
+      INSTALL_CMD=$(
+        cd "${WORKSPACE_PATH}" || exit 0
+        R CMD INSTALL "${BUILD_PKG}" 2>&1
+       )
+
+      ##############
+      # Error code #
+      ##############
+      ERROR_CODE=$?
+
+      ##############################
+      # Check the shell for errors #
+      ##############################
+      if [ "${ERROR_CODE}" -ne 0 ]; then
+        # Error
+        warn "ERROR: Failed to install the build package at:[${BUILD_PKG}]"
+        warn "INSTALL_CMD:[${INSTALL_CMD}]"
+      fi
     fi
   fi
 }
