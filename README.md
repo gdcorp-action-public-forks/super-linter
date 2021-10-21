@@ -175,7 +175,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.10
+        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.25
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
@@ -208,12 +208,12 @@ The **GitHub Super-Linter** now builds and supports `multiple` images. We have f
 After further investigation, we were able to see that a few linters were very disk heavy. We removed those linters and created the `slim` image.
 This allows users to choose which **Super-Linter** they want to run and potentially speed up their build time.
 The available images:
-- `gdcorp-action-public-forks/super-linter:gdcorp-4.10`
-- `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.10` (not yet available, coming soon)
+- `gdcorp-action-public-forks/super-linter:gdcorp-4.25`
+- `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.25` (not yet available, coming soon)
 
 #### Standard Image
 
-The standard `gdcorp-action-public-forks/super-linter:gdcorp-4.10` comes with all supported linters.
+The standard `gdcorp-action-public-forks/super-linter:gdcorp-4.25` comes with all supported linters.
 Example usage:
 
 ```yml
@@ -221,7 +221,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter:gdcorp-4.10
+  uses: gdcorp-action-public-forks/super-linter:gdcorp-4.25
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -230,7 +230,7 @@ Example usage:
 
 #### Slim Image
 
-The slim `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.10` comes with all supported linters but removes the following:
+The slim `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.25` comes with all supported linters but removes the following:
 
 - `rust` linters
 - `dotenv` linters
@@ -247,7 +247,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: docker://ghcr.io/gdcorp-action-public-forks/super-linter:slim-gdcorp-4.10
+  uses: docker://ghcr.io/gdcorp-action-public-forks/super-linter:slim-gdcorp-4.25
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -472,7 +472,7 @@ Once found, it will load the certificate contents to a file, and to the trust st
 
 ```yml
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.10
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.25
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}
