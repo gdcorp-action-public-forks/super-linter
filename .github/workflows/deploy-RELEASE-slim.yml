@@ -123,12 +123,12 @@ jobs:
             BUILD_VERSION=${{ github.sha }}
           push: true
           tags: |
-            github/super-linter:slim-latest
-            github/super-linter:slim-v4
-            "github/super-linter:slim-${{ env.RELEASE_VERSION }}"
-            ghcr.io/github/super-linter:slim-latest
-            ghcr.io/github/super-linter:slim-v4
-            "ghcr.io/github/super-linter:slim-${{ env.RELEASE_VERSION }}"
+            gdcorp-action-public-forks/super-linter:slim-latest
+            gdcorp-action-public-forks/super-linter:slim-v4
+            "gdcorp-action-public-forks/super-linter:slim-${{ env.RELEASE_VERSION }}"
+            ghcr.io/gdcorp-action-public-forks/super-linter:slim-latest
+            ghcr.io/gdcorp-action-public-forks/super-linter:slim-v4
+            "ghcr.io/gdcorp-action-public-forks/super-linter:slim-${{ env.RELEASE_VERSION }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -154,7 +154,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-          env_url: https://github.com/github/super-linter/releases/tag/${{ env.RELEASE_VERSION }}
+          env_url: https://github.com/gdcorp-action-public-forks/super-linter/releases/tag/${{ env.RELEASE_VERSION }}
 
       #######################################################
       # Create a GitHub Issue with the info from this build #
