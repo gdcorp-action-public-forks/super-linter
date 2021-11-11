@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AWSTailSettings">
+    <option name="credentialType" value="Profile (Credentials File)" />
+    <option name="region" value="us-west-2" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="Python 3.9 (super-linter3.9)" project-jdk-type="Python SDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="ScalaSbtSettings">
+    <option name="customVMPath" />
+    <option name="maximumHeapSize" value="4096" />
+  </component>
+</project>

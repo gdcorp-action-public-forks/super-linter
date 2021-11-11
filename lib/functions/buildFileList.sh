@@ -34,7 +34,7 @@ function GenerateFileDiff() {
     # Error
     info "Failed to get Diff with:[$CMD]"
     info "Check that you have the full git history, the checkout is not shallow, etc"
-    info "See https://github.com/github/super-linter#example-connecting-github-action-workflow"
+    info "See https://github.com/gdcorp-action-public-forks/super-linter#example-connecting-github-action-workflow"
     fatal "[${CMD_OUTPUT}]"
   fi
 
@@ -686,6 +686,15 @@ function BuildFileList() {
       # Append the crate manifest file to the array #
       ###############################################
       FILE_ARRAY_RUST_CLIPPY+=("${FILE}")
+
+    ###########################
+    # Get the SCALA files #
+    ###########################
+    elif [ "${FILE_TYPE}" == "scala" ] || [ "${BASE_FILE}" == "??????" ]; then
+      ################################
+      # Append the file to the array #
+      ################################
+      FILE_ARRAY_SCALAFMT+=("${FILE}")
 
     ###########################
     # Get the SNAKEMAKE files #

@@ -89,6 +89,7 @@ Developers on **GitHub** can call the **GitHub Action** to lint their codebase w
 | **Raku**                         | [Raku](https://raku.org)                                                                                                                                                      |
 | **Ruby**                         | [RuboCop](https://github.com/rubocop-hq/rubocop)                                                                                                                              |
 | **Rust**                         | [Rustfmt](https://github.com/rust-lang/rustfmt) / [Clippy](https://github.com/rust-lang/rust-clippy)                                                                          |
+| **Scala**                        | [scalafmt](https://github.com/scalameta/scalafmt)                                                                                                                             |
 | **Secrets**                      | [GitLeaks](https://github.com/zricethezav/gitleaks)                                                                                                                           |
 | **Shell**                        | [Shellcheck](https://github.com/koalaman/shellcheck) / [executable bit check] / [shfmt](https://github.com/mvdan/sh)                                                          |
 | **Snakemake**                    | [snakefmt](https://github.com/snakemake/snakefmt/) / [snakemake --lint](https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html#best-practices)         |
@@ -111,7 +112,7 @@ To use this **GitHub** Action you will need to complete the following:
 3. Commit that file to a new branch
 4. Open up a pull request and observe the action working
 5. Enjoy your more _stable_, and _cleaner_ codebase
-6. Check out the [Wiki](https://github.com/github/super-linter/wiki) for customization options
+6. Check out the [Wiki](https://github.com/gdcorp-action-public-forks/super-linter/wiki) for customization options
 
 **NOTE:** If you pass the _Environment_ variable `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}` in your workflow, then the **GitHub Super-Linter** will mark the status of each individual linter run in the Checks section of a pull request. Without this you will only see the overall status of the full run. There is no need to set the **GitHub** Secret as it is automatically set by GitHub, it only needs to be passed to the action.
 
@@ -175,7 +176,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.10
+        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
@@ -186,18 +187,18 @@ jobs:
 
 You can show Super-Linter status with a badge in your repository README
 
-[![GitHub Super-Linter](https://github.com/nvuillam/npm-groovy-lint/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/gdcorp-action-public-forks/super-linter/tree/gdcorp-4.10)
+[![GitHub Super-Linter](https://github.com/nvuillam/npm-groovy-lint/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 Format:
 
 ```markdown
-[![GitHub Super-Linter](https://github.com/<OWNER>/<REPOSITORY>/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/gdcorp-action-public-forks/super-linter/tree/gdcorp-4.10)
+[![GitHub Super-Linter](https://github.com/<OWNER>/<REPOSITORY>/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ```
 
 Example:
 
 ```markdown
-[![GitHub Super-Linter](https://github.com/nvuillam/npm-groovy-lint/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/gdcorp-action-public-forks/super-linter/tree/gdcorp-4.10)
+[![GitHub Super-Linter](https://github.com/nvuillam/npm-groovy-lint/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ```
 
 _Note:_ IF you did not use `Lint Code Base` as GitHub Action name, please read [GitHub Actions Badges documentation](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#adding-a-workflow-status-badge-to-your-repository)
@@ -208,12 +209,12 @@ The **GitHub Super-Linter** now builds and supports `multiple` images. We have f
 After further investigation, we were able to see that a few linters were very disk heavy. We removed those linters and created the `slim` image.
 This allows users to choose which **Super-Linter** they want to run and potentially speed up their build time.
 The available images:
-- `gdcorp-action-public-forks/super-linter:gdcorp-4.10`
-- `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.10` (not yet available, coming soon)
+- `gdcorp-action-public-forks/super-linter:latest`
+- `gdcorp-action-public-forks/super-linter:latest`
 
 #### Standard Image
 
-The standard `gdcorp-action-public-forks/super-linter:gdcorp-4.10` comes with all supported linters.
+The standard `gdcorp-action-public-forks/super-linter:latest` comes with all supported linters.
 Example usage:
 
 ```yml
@@ -221,7 +222,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter:gdcorp-4.10
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -230,7 +231,7 @@ Example usage:
 
 #### Slim Image
 
-The slim `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.10` comes with all supported linters but removes the following:
+The slim `gdcorp-action-public-forks/super-linter:latest` comes with all supported linters but removes the following:
 
 - `rust` linters
 - `dotenv` linters
@@ -247,7 +248,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: docker://ghcr.io/gdcorp-action-public-forks/super-linter:slim-gdcorp-4.10
+  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.27
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -308,6 +309,7 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **RUBY_CONFIG_FILE**               | `.ruby-lint.yml`                | Filename for [rubocop configuration](https://docs.rubocop.org/rubocop/configuration.html) (ex: `.ruby-lint.yml`, `.rubocop.yml`)                                                                                     |
 | **SUPPRESS_FILE_TYPE_WARN**        | `false`                         | If set to `true`, will hide warning messages about files without their proper extensions. Default is `false`                                                                                                         |
 | **SUPPRESS_POSSUM**                | `false`                         | If set to `true`, will hide the ASCII possum at top of log output. Default is `false`                                                                                                                                |
+| **SCALAFMT_CONFIG_FILE**           | `.scalafmt.conf`                | Filename for [scalafmt configuration](https://scalameta.org/scalafmt/docs/configuration.html) (ex: `.scalafmt.conf`)                                                                                                 |
 | **SNAKEMAKE_SNAKEFMT_CONFIG_FILE** | `.snakefmt.toml`                | Filename for [Snakemake configuration](https://github.com/snakemake/snakefmt#configuration) (ex: `pyproject.toml`, `.snakefmt.toml`)                                                                                 |
 | **SSL_CERT_SECRET**                | `none`                          | SSL cert to add to the **Super-Linter** trust store. This is needed for users on `self-hosted` runners or need to inject the cert for security standards (ex. ${{ secrets.SSL_CERT }})                               |
 | **SQL_CONFIG_FILE**                | `.sql-config.json`              | Filename for [SQL-Lint configuration](https://sql-lint.readthedocs.io/en/latest/files/configuration.html) (ex: `sql-config.json` , `.config.json`)                                                                   |
@@ -373,6 +375,7 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **VALIDATE_RUST_2015**             | `true`                          | Flag to enable or disable the linting process of the Rust language. (edition: 2015)                                                                                                                                  |
 | **VALIDATE_RUST_2018**             | `true`                          | Flag to enable or disable the linting process of Rust language. (edition: 2018)                                                                                                                                      |
 | **VALIDATE_RUST_CLIPPY**           | `true`                          | Flag to enable or disable the clippy linting process of Rust language.                                                                                                                                               |
+| **VALIDATE_SCALAFMT_LINT**         | `true`                          | Flag to enable or disable the linting process of Scala language. (Utilizing: scalafmt --test)                                                                                                                        |
 | **VALIDATE_SHELL_SHFMT**           | `true`                          | Flag to enable or disable the linting process of Shell scripts. (Utilizing: shfmt)                                                                                                                                   |
 | **VALIDATE_SNAKEMAKE_LINT**        | `true`                          | Flag to enable or disable the linting process of Snakefiles. (Utilizing: snakemake --lint)                                                                                                                           |
 | **VALIDATE_SNAKEMAKE_SNAKEFMT**    | `true`                          | Flag to enable or disable the linting process of Snakefiles. (Utilizing: snakefmt)                                                                                                                                   |
@@ -437,7 +440,7 @@ echo "@generated" # @not-generated
 
 ## Docker Hub
 
-The **Docker** container that is built from this repository is located at [ghcr.io/super-linter](https://github.com/gdcorp-action-public-forks/super-linter/pkgs/container/super-linter)
+The **Docker** container that is built from this repository is located at [gdcorp-action-public-forks/super-linter](https://hub.docker.com/r/gdcorp-action-public-forks/super-linter)
 
 ## Run Super-Linter outside GitHub Actions
 
@@ -472,7 +475,7 @@ Once found, it will load the certificate contents to a file, and to the trust st
 
 ```yml
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.10
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}
@@ -492,7 +495,7 @@ Below are a list of the known limitations for the **GitHub Super-Linter**:
 
 ## How to contribute
 
-If you would like to help contribute to this **GitHub** Action, please see [CONTRIBUTING](https://github.com/github/super-linter/blob/main/.github/CONTRIBUTING.md)
+If you would like to help contribute to this **GitHub** Action, please see [CONTRIBUTING](https://github.com/gdcorp-action-public-forks/super-linter/blob/main/.github/CONTRIBUTING.md)
 
 ---
 

@@ -44,13 +44,13 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       #########################
       # Update deployment API #
       #########################
       - name: Start deployment
-        uses: bobheadxi/deployments@v0.6.0
+        uses: bobheadxi/deployments@v0.6.1
         id: deployment
         with:
           step: start
@@ -123,12 +123,12 @@ jobs:
             BUILD_VERSION=${{ github.sha }}
           push: true
           tags: |
-            github/super-linter:latest
-            github/super-linter:v4
-            "github/super-linter:${{ env.RELEASE_VERSION }}"
-            ghcr.io/github/super-linter:latest
-            ghcr.io/github/super-linter:v4
-            "ghcr.io/github/super-linter:${{ env.RELEASE_VERSION }}"
+            gdcorp-action-public-forks/super-linter:latest
+            gdcorp-action-public-forks/super-linter:v4
+            "gdcorp-action-public-forks/super-linter:${{ env.RELEASE_VERSION }}"
+            ghcr.io/gdcorp-action-public-forks/super-linter:latest
+            ghcr.io/gdcorp-action-public-forks/super-linter:v4
+            "ghcr.io/gdcorp-action-public-forks/super-linter:${{ env.RELEASE_VERSION }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -147,14 +147,14 @@ jobs:
       # Update Deployment API #
       #########################
       - name: Update deployment status
-        uses: bobheadxi/deployments@v0.6.0
+        uses: bobheadxi/deployments@v0.6.1
         if: always()
         with:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-          env_url: https://github.com/github/super-linter/releases/tag/${{ env.RELEASE_VERSION }}
+          env_url: https://github.com/gdcorp-action-public-forks/super-linter/releases/tag/${{ env.RELEASE_VERSION }}
 
       #######################################################
       # Create a GitHub Issue with the info from this build #
