@@ -10,11 +10,11 @@
 FROM cljkondo/clj-kondo:2021.10.19-alpine as clj-kondo
 FROM dotenvlinter/dotenv-linter:3.1.1 as dotenv-linter
 FROM mstruebing/editorconfig-checker:2.3.5 as editorconfig-checker
-FROM yoheimuta/protolint:v0.35.1 as protolint
+FROM yoheimuta/protolint:v0.35.2 as protolint
 FROM golangci/golangci-lint:v1.43.0 as golangci-lint
-FROM koalaman/shellcheck:v0.7.2 as shellcheck
+FROM koalaman/shellcheck:v0.8.0 as shellcheck
 FROM ghcr.io/terraform-linters/tflint-bundle:v0.33.1 as tflint
-FROM alpine/terragrunt:1.0.9 as terragrunt
+FROM alpine/terragrunt:1.0.10 as terragrunt
 FROM mvdan/shfmt:v3.4.0 as shfmt
 FROM accurics/terrascan:1.12.0 as terrascan
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
@@ -23,6 +23,7 @@ FROM zricethezav/gitleaks:v7.6.1 as gitleaks
 FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/assignuser/lintr-lib:0.3.0 as lintr-lib
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
+FROM scalameta/scalafmt:v2.7.5 as scalafmt
 
 ##################
 # Get base image #
@@ -253,6 +254,11 @@ COPY --from=clang-format /usr/bin/clang-format /usr/bin/
 ####################
 COPY --from=gitleaks /usr/bin/gitleaks /usr/bin/
 
+####################
+# Install scalafmt #
+####################
+COPY --from=scalafmt /bin/scalafmt /usr/bin/
+
 #################
 # Install Litnr #
 #################
@@ -288,8 +294,7 @@ RUN curl --retry 5 --retry-delay 5 -sSLO https://github.com/pinterest/ktlint/rel
 # Install Raku and additional Edge dependencies #
 #################################################
 # Basic setup, programs and init
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories \
-    && apk add --no-cache rakudo zef \
+RUN apk add --no-cache rakudo zef \
 ######################
 # Install CheckStyle #
 ######################
@@ -399,7 +404,7 @@ RUN wget --tries=5 -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sger
     && rm phive.phar.asc \
     && phive --no-progress install --trust-gpg-keys \
     31C7E470E2138192,CF1A108D0E7AE720,8A03EA3B385DBAA1,12CE0F1D262429A5 \
-    --target /usr/bin phpstan@^0.12.64 psalm@^3.18.2 phpcs@^3.5.8
+    --target /usr/bin phpstan@^1.1.1 psalm@^4.12.0 phpcs@^3.6.1
 
 #################################
 # Copy the libraries into image #
