@@ -34,7 +34,7 @@ function GenerateFileDiff() {
     # Error
     info "Failed to get Diff with:[$CMD]"
     info "Check that you have the full git history, the checkout is not shallow, etc"
-    info "See https://github.com/github/super-linter#example-connecting-github-action-workflow"
+    info "See https://github.com/gdcorp-action-public-forks/super-linter#example-connecting-github-action-workflow"
     fatal "[${CMD_OUTPUT}]"
   fi
 

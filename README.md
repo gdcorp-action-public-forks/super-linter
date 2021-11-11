@@ -3,8 +3,6 @@
 This repository is for the **GitHub Action** to run a **Super-Linter**.
 It is a simple combination of various linters, written in `bash`, to help validate your source code.
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/51071879604e4f319859d4daf91c68f5)](https://app.codacy.com/gh/github/super-linter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=github/super-linter&amp;utm_campaign=Badge_Grade)
-
 **The end goal of this tool:**
 
 - Prevent broken code from being uploaded to the default branch (_Usually_ `master` or `main`)
@@ -114,7 +112,7 @@ To use this **GitHub** Action you will need to complete the following:
 3. Commit that file to a new branch
 4. Open up a pull request and observe the action working
 5. Enjoy your more _stable_, and _cleaner_ codebase
-6. Check out the [Wiki](https://github.com/github/super-linter/wiki) for customization options
+6. Check out the [Wiki](https://github.com/gdcorp-action-public-forks/super-linter/wiki) for customization options
 
 **NOTE:** If you pass the _Environment_ variable `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}` in your workflow, then the **GitHub Super-Linter** will mark the status of each individual linter run in the Checks section of a pull request. Without this you will only see the overall status of the full run. There is no need to set the **GitHub** Secret as it is automatically set by GitHub, it only needs to be passed to the action.
 
@@ -178,7 +176,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
@@ -211,12 +209,12 @@ The **GitHub Super-Linter** now builds and supports `multiple` images. We have f
 After further investigation, we were able to see that a few linters were very disk heavy. We removed those linters and created the `slim` image.
 This allows users to choose which **Super-Linter** they want to run and potentially speed up their build time.
 The available images:
-- `github/super-linter:v4`
-- `github/super-linter:slim-v4`
+- `gdcorp-action-public-forks/super-linter:latest`
+- `gdcorp-action-public-forks/super-linter:latest`
 
 #### Standard Image
 
-The standard `github/super-linter:v4` comes with all supported linters.
+The standard `gdcorp-action-public-forks/super-linter:latest` comes with all supported linters.
 Example usage:
 
 ```yml
@@ -224,7 +222,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: github/super-linter@v4
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -233,7 +231,7 @@ Example usage:
 
 #### Slim Image
 
-The slim `github/super-linter:slim-v4` comes with all supported linters but removes the following:
+The slim `gdcorp-action-public-forks/super-linter:latest` comes with all supported linters but removes the following:
 
 - `rust` linters
 - `dotenv` linters
@@ -250,7 +248,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: github/super-linter/slim@v4
+  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.27
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -400,7 +398,7 @@ But if you wish to select or exclude specific linters, we give you full control 
 You can use the **GitHub** **Super-Linter** _with_ or _without_ your own personal rules sets. This allows for greater flexibility for each individual codebase. The Template rules all try to follow the standards we believe should be enabled at the basic level.
 
 - Copy **any** or **all** template rules files from `TEMPLATES/` into the `.github/linters/` directory of your repository, and modify them to suit your needs.
-  - The rules files in [this repository's `TEMPLATE` folder](https://github.com/github/super-linter/tree/main/TEMPLATES) will be used as defaults should any be omitted.
+  - The rules files in [this repository's `TEMPLATE` folder](https://github.com/gdcorp-action-public-forks/super-linter/tree/main/TEMPLATES) will be used as defaults should any be omitted.
 
 ### Using your own rules files
 
@@ -408,7 +406,7 @@ If your repository contains your own rules files that live outside of a `.github
 
 ### Disabling rules
 
-If you need to disable certain _rules_ and _functionality_, you can view [Disable Rules](https://github.com/github/super-linter/blob/main/docs/disabling-linters.md)
+If you need to disable certain _rules_ and _functionality_, you can view [Disable Rules](https://github.com/gdcorp-action-public-forks/super-linter/blob/main/docs/disabling-linters.md)
 
 ## Filter linted files
 
@@ -442,13 +440,13 @@ echo "@generated" # @not-generated
 
 ## Docker Hub
 
-The **Docker** container that is built from this repository is located at [github/super-linter](https://hub.docker.com/r/github/super-linter)
+The **Docker** container that is built from this repository is located at [gdcorp-action-public-forks/super-linter](https://hub.docker.com/r/gdcorp-action-public-forks/super-linter)
 
 ## Run Super-Linter outside GitHub Actions
 
 ### Local (troubleshooting/debugging/enhancements)
 
-If you find that you need to run super-linter locally, you can follow the documentation at [Running super-linter locally](https://github.com/github/super-linter/blob/main/docs/run-linter-locally.md)
+If you find that you need to run super-linter locally, you can follow the documentation at [Running super-linter locally](https://github.com/gdcorp-action-public-forks/super-linter/blob/main/docs/run-linter-locally.md)
 
 Check out the [note](#how-it-works) in **How it Works** to understand more about the **Super-Linter** linting locally versus via continuous integration.
 
@@ -477,7 +475,7 @@ Once found, it will load the certificate contents to a file, and to the trust st
 
 ```yml
 - name: Lint Code Base
-  uses: github/super-linter@v4
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}
@@ -497,10 +495,10 @@ Below are a list of the known limitations for the **GitHub Super-Linter**:
 
 ## How to contribute
 
-If you would like to help contribute to this **GitHub** Action, please see [CONTRIBUTING](https://github.com/github/super-linter/blob/main/.github/CONTRIBUTING.md)
+If you would like to help contribute to this **GitHub** Action, please see [CONTRIBUTING](https://github.com/gdcorp-action-public-forks/super-linter/blob/main/.github/CONTRIBUTING.md)
 
 ---
 
 ### License
 
-- [MIT License](https://github.com/github/super-linter/blob/main/LICENSE)
+- [MIT License](https://github.com/gdcorp-action-public-forks/super-linter/blob/main/LICENSE)
