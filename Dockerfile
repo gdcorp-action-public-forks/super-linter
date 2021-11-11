@@ -14,7 +14,7 @@ FROM yoheimuta/protolint:v0.35.2 as protolint
 FROM golangci/golangci-lint:v1.43.0 as golangci-lint
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
 FROM ghcr.io/terraform-linters/tflint-bundle:v0.33.1 as tflint
-FROM alpine/terragrunt:1.0.11 as terragrunt
+FROM alpine/terragrunt:1.0.10 as terragrunt
 FROM mvdan/shfmt:v3.4.0 as shfmt
 FROM accurics/terrascan:1.12.0 as terrascan
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
@@ -23,7 +23,7 @@ FROM zricethezav/gitleaks:v7.6.1 as gitleaks
 FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/assignuser/lintr-lib:0.3.0 as lintr-lib
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
-FROM scalameta/scalafmt:v3.1.0 as scalafmt
+FROM scalameta/scalafmt:v2.7.5 as scalafmt
 
 ##################
 # Get base image #
@@ -352,18 +352,18 @@ ARG ARM_TTK_DIRECTORY='/usr/lib/microsoft'
 #########################################
 # Label the instance and set maintainer #
 #########################################
-LABEL com.github.actions.name="GoDaddy GitHub Super-Linter" \
+LABEL com.github.actions.name="GitHub Super-Linter" \
     com.github.actions.description="Lint your code base with GitHub Actions" \
     com.github.actions.icon="code" \
     com.github.actions.color="red" \
-    maintainer="Cloud-Automation <asaa@godaddy.com>" \
+    maintainer="GitHub DevOps <github_devops@github.com>" \
     org.opencontainers.image.created=$BUILD_DATE \
     org.opencontainers.image.revision=$BUILD_REVISION \
     org.opencontainers.image.version=$BUILD_VERSION \
     org.opencontainers.image.authors="GitHub DevOps <github_devops@github.com>" \
-    org.opencontainers.image.url="https://github.com/gdcorp-action-public-forks/super-linter" \
-    org.opencontainers.image.source="https://github.com/gdcorp-action-public-forks/super-linter" \
-    org.opencontainers.image.documentation="https://github.com/gdcorp-action-public-forks/super-linter" \
+    org.opencontainers.image.url="https://github.com/github/super-linter" \
+    org.opencontainers.image.source="https://github.com/github/super-linter" \
+    org.opencontainers.image.documentation="https://github.com/github/super-linter" \
     org.opencontainers.image.vendor="GitHub" \
     org.opencontainers.image.description="Lint your code base with GitHub Actions"
 
