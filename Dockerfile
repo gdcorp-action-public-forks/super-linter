@@ -23,7 +23,7 @@ FROM zricethezav/gitleaks:v7.6.1 as gitleaks
 FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/assignuser/lintr-lib:0.3.0 as lintr-lib
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
-FROM scalameta/scalafmt:v2.7.5 as scalafmt
+FROM scalameta/scalafmt:v3.1.0 as scalafmt
 
 ##################
 # Get base image #
@@ -71,6 +71,7 @@ RUN apk add --no-cache \
     lttng-ust-dev \
     make \
     musl-dev \
+    net-snmp-dev \
     npm nodejs-current \
     openjdk11-jre \
     openssl-dev \
@@ -136,7 +137,7 @@ RUN pip3 install --no-cache-dir pipenv \
 ########################
 # Install Python Black #
 ########################
-    && wget --tries=5 -q -O /usr/local/bin/black https://github.com/psf/black/releases/download/21.9b0/black_linux \
+    && wget --tries=5 -q -O /usr/local/bin/black https://github.com/psf/black/releases/download/21.11b1/black_linux \
     && chmod +x /usr/local/bin/black
 ##############################
 # Installs Perl dependencies #
@@ -328,6 +329,8 @@ RUN apk add --no-cache rakudo zef \
     && cd .. \
     && rm -r luarocks-3.3.1-super-linter/ \
     && luarocks install luacheck \
+    && luarocks install argparse \
+    && luarocks install luafilesystem \
     && mv /etc/R/* /usr/lib/R/etc/ \
     && find /node_modules/ -type f -name 'LICENSE' -exec rm {} + \
     && find /node_modules/ -type f -name '*.md' -exec rm {} + \
