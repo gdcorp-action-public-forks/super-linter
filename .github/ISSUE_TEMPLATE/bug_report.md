@@ -31,7 +31,7 @@ docker run \
   -e MULTI_STATUS=false \
   -e VALIDATE_ALL_CODEBASE=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/gdcorp-action-public-forks/super-linter:gdcorp-4.28
+  ghcr.io/gdcorp-action-public-forks/super-linter:gdcorp-4.29
 -->
 
 1. Go to '...'

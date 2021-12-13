@@ -176,7 +176,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.28
+        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
@@ -223,7 +223,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.28
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -249,7 +249,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.28
+  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.29
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -478,7 +478,7 @@ Once found, it will load the certificate contents to a file, and to the trust st
 
 ```yml
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.28
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}
