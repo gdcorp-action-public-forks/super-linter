@@ -7,22 +7,22 @@
 #########################################
 # Get dependency images as build stages #
 #########################################
-FROM cljkondo/clj-kondo:2021.12.01-alpine as clj-kondo
+FROM cljkondo/clj-kondo:2021.12.19-alpine as clj-kondo
 FROM dotenvlinter/dotenv-linter:3.1.1 as dotenv-linter
-FROM mstruebing/editorconfig-checker:2.3.5 as editorconfig-checker
+FROM mstruebing/editorconfig-checker:2.4.0 as editorconfig-checker
 FROM yoheimuta/protolint:v0.35.2 as protolint
 FROM golangci/golangci-lint:v1.43.0 as golangci-lint
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
-FROM ghcr.io/terraform-linters/tflint-bundle:v0.33.2.0 as tflint
-FROM alpine/terragrunt:1.0.11 as terragrunt
-FROM mvdan/shfmt:v3.4.1 as shfmt
+FROM ghcr.io/terraform-linters/tflint-bundle:v0.34.1.1 as tflint
+FROM alpine/terragrunt:1.1.2 as terragrunt
+FROM mvdan/shfmt:v3.4.2 as shfmt
 FROM accurics/terrascan:1.12.0 as terrascan
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
 FROM assignuser/chktex-alpine:v0.1.1 as chktex
-FROM zricethezav/gitleaks:v8.0.4 as gitleaks
+FROM zricethezav/gitleaks:v8.2.5 as gitleaks
 FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
-FROM scalameta/scalafmt:v3.2.1 as scalafmt
+FROM scalameta/scalafmt:v3.3.1 as scalafmt
 FROM rhysd/actionlint:1.6.8 as actionlint
 
 ##################
@@ -38,6 +38,8 @@ FROM python:3.10.1-alpine as base_image
 ARG DART_VERSION='2.8.4'
 ## install alpine-pkg-glibc (glibc compatibility layer package for Alpine Linux)
 ARG GLIBC_VERSION='2.31-r0'
+# Unicode version info
+ARG UNICODE_VERSION='2021-11-01-1136'
 
 ####################
 # Run APK installs #
@@ -89,6 +91,9 @@ RUN pip3 install --no-cache-dir pipenv \
     # Bug in hadolint thinks pipenv is pip
     # hadolint ignore=DL3042
     && pipenv install --clear --system \
+    && wget --tries=5 -q https://access.redhat.com/sites/default/files/find_unicode_control2--${UNICODE_VERSION}.zip -O - -q | unzip -q - \
+    && mv find_unicode_control2.py /usr/local/bin/find_unicode_control2.py \
+    && chmod +x /usr/local/bin/find_unicode_control2.py \
     ####################
     # Run NPM Installs #
     ####################
@@ -329,15 +334,16 @@ RUN wget --tries=5 -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sger
     ca-certificates \
     git git-lfs \
     glibc-${GLIBC_VERSION}.apk \
+    tar zstd \
     gnupg \
     php7 php7-curl php7-ctype php7-dom php7-iconv php7-json php7-mbstring \
     php7-openssl php7-phar php7-simplexml php7-tokenizer php-xmlwriter \
     && rm glibc-${GLIBC_VERSION}.apk \
-    && wget -q --tries=5 -O /tmp/libz.tar.xz https://www.archlinux.org/packages/core/x86_64/zlib/download \
+    && wget -q --tries=5 -O /tmp/libz.tar.zst https://www.archlinux.org/packages/core/x86_64/zlib/download \
     && mkdir /tmp/libz \
-    && tar -xf /tmp/libz.tar.xz -C /tmp/libz \
+    && tar -xf /tmp/libz.tar.zst -C /tmp/libz --zstd \
     && mv /tmp/libz/usr/lib/libz.so* /usr/glibc-compat/lib \
-    && rm -rf /tmp/libz /tmp/libz.tar.xz \
+    && rm -rf /tmp/libz /tmp/libz.tar.zst \
     && wget -q --tries=5 -O phive.phar https://phar.io/releases/phive.phar \
     && wget -q --tries=5 -O phive.phar.asc https://phar.io/releases/phive.phar.asc \
     && PHAR_KEY_ID="0x9D8A98B29B2D5D79" \

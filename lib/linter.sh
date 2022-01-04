@@ -144,7 +144,7 @@ PHP_PSALM_FILE_NAME="psalm.xml"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
 POWERSHELL_FILE_NAME=".powershell-psscriptanalyzer.psd1"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
-PROTOBUF_FILE_NAME=".protolintrc.yml"
+PROTOBUF_FILE_NAME="${PROTOBUF_CONFIG_FILE:-.protolintrc.yml}"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
 PYTHON_BLACK_FILE_NAME="${PYTHON_BLACK_CONFIG_FILE:-.python-black}"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
@@ -187,6 +187,8 @@ TYPESCRIPT_STYLE=''      # Variable for the style
 TYPESCRIPT_ES_FILE_NAME="${TYPESCRIPT_ES_CONFIG_FILE:-.eslintrc.yml}"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
 TYPESCRIPT_STANDARD_FILE_NAME="${TYPESCRIPT_ES_CONFIG_FILE:-.eslintrc.yml}"
+# shellcheck disable=SC2034  # Variable is referenced indirectly
+UNICODE_CONTROL_FILE_NAME="${UNICODE_CONTROL_CONFIG_FILE:-unicode_control_config.py}"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
 USE_FIND_ALGORITHM="${USE_FIND_ALGORITHM:-false}"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
@@ -242,7 +244,7 @@ LANGUAGE_ARRAY=('ANSIBLE' 'ARM' 'BASH' 'BASH_EXEC' 'CLANG_FORMAT'
   'PYTHON_ISORT' 'PYTHON_MYPY' 'R' 'RAKU' 'RUBY' 'RUST_2015' 'RUST_2018'
   'RUST_2021' 'RUST_CLIPPY' 'SCALAFMT' 'SHELL_SHFMT' 'SNAKEMAKE_LINT'
   'SNAKEMAKE_SNAKEFMT' 'STATES' 'SQL' 'SQLFLUFF' 'TEKTON' 'TERRAFORM_TFLINT'
-  'TERRAFORM_TERRASCAN' 'TERRAGRUNT' 'TSX' 'TYPESCRIPT_ES'
+  'TERRAFORM_TERRASCAN' 'TERRAGRUNT' 'TSX' 'TYPESCRIPT_ES' 'UNICODE_CONTROL'
   "${TYPESCRIPT_STYLE_NAME}" 'XML' 'YAML')
 
 ##############################
@@ -318,6 +320,7 @@ LINTER_NAMES_ARRAY['TERRAGRUNT']="terragrunt"
 LINTER_NAMES_ARRAY['TSX']="eslint"
 LINTER_NAMES_ARRAY['TYPESCRIPT_ES']="eslint"
 LINTER_NAMES_ARRAY["${TYPESCRIPT_STYLE_NAME}"]="${TYPESCRIPT_STYLE}"
+LINTER_NAMES_ARRAY['UNICODE_CONTROL']="find_unicode_control2.py"
 LINTER_NAMES_ARRAY['XML']="xmllint"
 LINTER_NAMES_ARRAY['YAML']="yamllint"
 
@@ -938,6 +941,7 @@ LINTER_COMMANDS_ARRAY['TSX']="eslint --no-eslintrc -c ${TSX_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['TYPESCRIPT_ES']="eslint --no-eslintrc -c ${TYPESCRIPT_ES_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['TYPESCRIPT_STANDARD']="standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin ${TYPESCRIPT_STANDARD_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['TYPESCRIPT_PRETTIER']="prettier --check"
+LINTER_COMMANDS_ARRAY['UNICODE_CONTROL']="find_unicode_control2.py -c ${UNICODE_CONTROL_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['XML']="xmllint"
 LINTER_COMMANDS_ARRAY['YAML']="yamllint -c ${YAML_LINTER_RULES} -f parsable"
 
