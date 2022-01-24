@@ -8,7 +8,7 @@
 # Get dependency images as build stages #
 #########################################
 FROM accurics/terrascan:1.13.0 as terrascan
-FROM alpine/terragrunt:1.1.3 as terragrunt
+FROM alpine/terragrunt:1.1.4 as terragrunt
 FROM assignuser/chktex-alpine:v0.1.1 as chktex
 FROM cljkondo/clj-kondo:2022.01.15-alpine as clj-kondo
 FROM dotenvlinter/dotenv-linter:3.1.1 as dotenv-linter
@@ -17,7 +17,7 @@ FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
 FROM ghcr.io/terraform-linters/tflint-bundle:v0.34.1.1 as tflint
 FROM golangci/golangci-lint:v1.43.0 as golangci-lint
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
-FROM hashicorp/terraform:1.1.3 as terraform
+FROM hashicorp/terraform:1.1.4 as terraform
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
 FROM mstruebing/editorconfig-checker:2.4.0 as editorconfig-checker
 FROM mvdan/shfmt:v3.4.2 as shfmt
@@ -29,7 +29,7 @@ FROM zricethezav/gitleaks:v8.2.7 as gitleaks
 ##################
 # Get base image #
 ##################
-FROM python:3.10.1-alpine as base_image
+FROM python:3.10.2-alpine as base_image
 
 ################################
 # Set ARG values used in Build #
@@ -285,7 +285,7 @@ RUN apk add --no-cache rakudo zef \
 ################################################################################
 # Grab small clean image to build python packages ##############################
 ################################################################################
-FROM python:3.10.1-alpine as python_builder
+FROM python:3.10.2-alpine as python_builder
 RUN apk add --no-cache bash g++ git libffi-dev
 COPY dependencies/python/ /stage
 WORKDIR /stage
