@@ -26,6 +26,7 @@ It is a simple combination of various linters, written in `bash`, to help valida
     - [Template rules files](#template-rules-files)
     - [Using your own rules files](#using-your-own-rules-files)
     - [Disabling rules](#disabling-rules)
+    - [Using your own SSH key](#using-your-own-ssh-key)
   - [Filter linted files](#filter-linted-files)
   - [Docker Hub](#docker-hub)
   - [Run Super-Linter outside GitHub Actions](#run-super-linter-outside-github-actions)
@@ -52,8 +53,8 @@ Developers on **GitHub** can call the **GitHub Action** to lint their codebase w
 | _Language_                       | _Linter_                                                                                                                                                                      |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Ansible**                      | [ansible-lint](https://github.com/ansible/ansible-lint)                                                                                                                       |
-| **Azure Resource Manager (ARM)** | [arm-ttk](https://github.com/azure/arm-ttk)                                                                                                                                   |
 | **AWS CloudFormation templates** | [cfn-lint](https://github.com/aws-cloudformation/cfn-python-lint/)                                                                                                            |
+| **Azure Resource Manager (ARM)** | [arm-ttk](https://github.com/azure/arm-ttk)                                                                                                                                   |
 | **C++**                          | [cpp-lint](https://github.com/cpplint/cpplint) / [clang-format](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)                                                     |
 | **C#**                           | [dotnet-format](https://github.com/dotnet/format) / [clang-format](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)                                                  |
 | **CSS**                          | [stylelint](https://stylelint.io/)                                                                                                                                            |
@@ -61,11 +62,11 @@ Developers on **GitHub** can call the **GitHub Action** to lint their codebase w
 | **CoffeeScript**                 | [coffeelint](https://coffeelint.github.io/)                                                                                                                                   |
 | **Copy/paste detection**         | [jscpd](https://github.com/kucherenko/jscpd)                                                                                                                                  |
 | **Dart**                         | [dartanalyzer](https://dart.dev/guides/language/analysis-options)                                                                                                             |
-| **Dockerfile**                   | [dockerfilelint](https://github.com/replicatedhq/dockerfilelint.git) / [hadolint](https://github.com/hadolint/hadolint)                                                       |
+| **Dockerfile**                   | [hadolint](https://github.com/hadolint/hadolint)                                                       |
 | **EditorConfig**                 | [editorconfig-checker](https://github.com/editorconfig-checker/editorconfig-checker)                                                                                          |
 | **ENV**                          | [dotenv-linter](https://github.com/dotenv-linter/dotenv-linter)                                                                                                               |
-| **GitHub Actions**               | [actionlint](https://github.com/rhysd/actionlint)                                                                                                                             |
 | **Gherkin**                      | [gherkin-lint](https://github.com/vsiakka/gherkin-lint)                                                                                                                       |
+| **GitHub Actions**               | [actionlint](https://github.com/rhysd/actionlint)                                                                                                                             |
 | **Golang**                       | [golangci-lint](https://github.com/golangci/golangci-lint)                                                                                                                    |
 | **Groovy**                       | [npm-groovy-lint](https://github.com/nvuillam/npm-groovy-lint)                                                                                                                |
 | **HTML**                         | [HTMLHint](https://github.com/htmlhint/HTMLHint)                                                                                                                              |
@@ -136,7 +137,7 @@ name: Lint Code Base
 
 #
 # Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 #
 
 #############################
@@ -176,7 +177,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
+        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
@@ -209,8 +210,9 @@ The **GitHub Super-Linter** now builds and supports `multiple` images. We have f
 After further investigation, we were able to see that a few linters were very disk heavy. We removed those linters and created the `slim` image.
 This allows users to choose which **Super-Linter** they want to run and potentially speed up their build time.
 The available images:
-- `gdcorp-action-public-forks/super-linter:latest`
-- `gdcorp-action-public-forks/super-linter:latest`
+
+- `github/super-linter:latest`
+- `github/super-linter:slim-latest`
 
 #### Standard Image
 
@@ -222,7 +224,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -248,7 +250,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.27
+  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.29
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: master
@@ -284,41 +286,48 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **FILTER_REGEX_EXCLUDE**           | `none`                          | Regular expression defining which files will be excluded from linting  (ex: `.*src/test.*`)                                                                                                                          |
 | **FILTER_REGEX_INCLUDE**           | `all`                           | Regular expression defining which files will be processed by linters (ex: `.*src/.*`)                                                                                                                                |
 | **GITHUB_ACTIONS_CONFIG_FILE**     | `actionlint.yml`                | Filename for [Actionlint configuration](https://github.com/rhysd/actionlint/blob/main/docs/config.md) (ex: `actionlint.yml`)                                                                                         |
+| **GITHUB_CUSTOM_API_URL**          | `https://api.github.com`        | Specify a custom GitHub API URL in case GitHub Enterprise is used: e.g. `https://github.myenterprise.com/api/v3`                                                                                                     |
 | **GITHUB_DOMAIN**                  | `github.com`                    | Specify a custom GitHub domain in case GitHub Enterprise is used: e.g. `github.myenterprise.com`                                                                                                                     |
-| **GITHUB_CUSTOM_API_URL**          | `https://api.github.com`        | Specify a custom GitHub API URL in case GitHub Enterprise is used: e.g. `https://github.myenterprise.com/api/v3`                                                                                                     |                                                                                         |
 | **GITLEAKS_CONFIG_FILE**           | `.gitleaks.toml`                | Filename for [GitLeaks configuration](https://github.com/zricethezav/gitleaks#configuration) (ex: `.geatleaks.toml`)                                                                                                 |
 | **IGNORE_GENERATED_FILES**         | `false`                         | If set to `true`, super-linter will ignore all the files with `@generated` marker but without `@not-generated` marker.                                                                                               |
 | **IGNORE_GITIGNORED_FILES**        | `false`                         | If set to `true`, super-linter will ignore all the files that are ignored by Git.                                                                                                                                    |
-| **JAVA_FILE_NAME**                 | `sun-checks.xml`                | Filename for [Checkstyle configuration](https://checkstyle.sourceforge.io/config.html) (ex: `checkstyle.xml`)                                                                                                        |
-| **JAVASCRIPT_ES_CONFIG_FILE**      | `.eslintrc.yml`                 | Filename for [ESLint configuration](https://eslint.org/docs/user-guide/configuring#configuration-file-formats) (ex: `.eslintrc.yml`, `.eslintrc.json`)                                                               |
+| **JAVA_FILE_NAME**                 | `sun_checks.xml`                | Filename for [Checkstyle configuration](https://checkstyle.sourceforge.io/config.html) (ex: `checkstyle.xml`)                                                                                                        |
 | **JAVASCRIPT_DEFAULT_STYLE**       | `standard`                      | Flag to set the default style of JavaScript. Available options: **standard**/**prettier**                                                                                                                            |
+| **JAVASCRIPT_ES_CONFIG_FILE**      | `.eslintrc.yml`                 | Filename for [ESLint configuration](https://eslint.org/docs/user-guide/configuring#configuration-file-formats) (ex: `.eslintrc.yml`, `.eslintrc.json`)                                                               |
 | **JSCPD_CONFIG_FILE**              | `.jscpd.json`                   | Filename for JSCPD configuration                                                                                                                                                                                     |
 | **KUBERNETES_KUBEVAL_OPTIONS**     | `null`                          | Additional arguments to pass to the command-line when running **Kubernetes Kubeval** (Example: --ignore-missing-schemas)                                                                                             |
 | **LINTER_RULES_PATH**              | `.github/linters`               | Directory for all linter configuration rules.                                                                                                                                                                        |
-| **LOG_FILE**                       | `super-linter.log`              | The filename for outputting logs. All output is sent to the log file regardless of `LOG_LEVEL`.                                                                                                                     |
+| **LOG_FILE**                       | `super-linter.log`              | The filename for outputting logs. All output is sent to the log file regardless of `LOG_LEVEL`.                                                                                                                      |
 | **LOG_LEVEL**                      | `VERBOSE`                       | How much output the script will generate to the console. One of `ERROR`, `WARN`, `NOTICE`, `VERBOSE`, `DEBUG` or `TRACE`.                                                                                            |
-| **MULTI_STATUS**                   | `true`                          | A status API is made for each language that is linted to make visual parsing easier.                                                                                                                                 |
 | **MARKDOWN_CONFIG_FILE**           | `.markdown-lint.yml`            | Filename for [Markdownlint configuration](https://github.com/DavidAnson/markdownlint#optionsconfig) (ex: `.markdown-lint.yml`, `.markdownlint.json`, `.markdownlint.yaml`)                                           |
 | **MARKDOWN_CUSTOM_RULE_GLOBS**     | `.markdown-lint/rules,rules/**` | Comma-separated list of [file globs](https://github.com/igorshubovych/markdownlint-cli#globbing) matching [custom Markdownlint rule files](https://github.com/DavidAnson/markdownlint/blob/main/doc/CustomRules.md). |
+| **MULTI_STATUS**                   | `true`                          | A status API is made for each language that is linted to make visual parsing easier.                                                                                                                                 |
+| **NATURAL_LANGUAGE_CONFIG_FILE**   | `.textlintrc`                   | Filename for [textlint configuration](https://textlint.github.io/docs/getting-started.html#configuration) (ex: `.textlintrc`)                                                                                        |
 | **PHP_CONFIG_FILE**                | `php.ini`                       | Filename for [PHP Configuration](https://www.php.net/manual/en/configuration.file.php) (ex: `php.ini`)                                                                                                               |
-| **PYTHON_BLACK_CONFIG_FILE**       | `.python-black`                 | Filename for [black configuration](https://github.com/psf/black/blob/main/docs/guides/using_black_with_other_tools.md#black-compatible-configurations) (ex: `.isort.cfg`, `pyproject.toml`)                                                                         |
+| **PROTOBUF_CONFIG_FILE**           | `.protolintrc.yml`              | Filename for [protolint configuration](https://github.com/yoheimuta/protolint/blob/master/_example/config/.protolint.yaml) (ex: `.protolintrc.yml`)                                                                                                                                                    |
+| **PYTHON_BLACK_CONFIG_FILE**       | `.python-black`                 | Filename for [black configuration](https://github.com/psf/black/blob/main/docs/guides/using_black_with_other_tools.md#black-compatible-configurations) (ex: `.isort.cfg`, `pyproject.toml`)                          |
 | **PYTHON_FLAKE8_CONFIG_FILE**      | `.flake8`                       | Filename for [flake8 configuration](https://flake8.pycqa.org/en/latest/user/configuration.html) (ex: `.flake8`, `tox.ini`)                                                                                           |
-| **PYTHON_ISORT_CONFIG_FILE**       | `.isort.cfg`                    | Filename for [isort configuration](https://pycqa.github.io/isort/docs/configuration/config_files.html) (ex: `.isort.cfg`, `pyproject.toml`)                                                                              |
+| **PYTHON_ISORT_CONFIG_FILE**       | `.isort.cfg`                    | Filename for [isort configuration](https://pycqa.github.io/isort/docs/configuration/config_files.html) (ex: `.isort.cfg`, `pyproject.toml`)                                                                          |
 | **PYTHON_MYPY_CONFIG_FILE**        | `.mypy.ini`                     | Filename for [mypy configuration](https://mypy.readthedocs.io/en/stable/config_file.html) (ex: `.mypi.ini`, `setup.config`)                                                                                          |
 | **PYTHON_PYLINT_CONFIG_FILE**      | `.python-lint`                  | Filename for [pylint configuration](https://pylint.pycqa.org/en/latest/user_guide/run.html?highlight=rcfile#command-line-options) (ex: `.python-lint`, `.pylintrc`)                                                  |
 | **RUBY_CONFIG_FILE**               | `.ruby-lint.yml`                | Filename for [rubocop configuration](https://docs.rubocop.org/rubocop/configuration.html) (ex: `.ruby-lint.yml`, `.rubocop.yml`)                                                                                     |
-| **SUPPRESS_FILE_TYPE_WARN**        | `false`                         | If set to `true`, will hide warning messages about files without their proper extensions. Default is `false`                                                                                                         |
-| **SUPPRESS_POSSUM**                | `false`                         | If set to `true`, will hide the ASCII possum at top of log output. Default is `false`                                                                                                                                |
 | **SCALAFMT_CONFIG_FILE**           | `.scalafmt.conf`                | Filename for [scalafmt configuration](https://scalameta.org/scalafmt/docs/configuration.html) (ex: `.scalafmt.conf`)                                                                                                 |
 | **SNAKEMAKE_SNAKEFMT_CONFIG_FILE** | `.snakefmt.toml`                | Filename for [Snakemake configuration](https://github.com/snakemake/snakefmt#configuration) (ex: `pyproject.toml`, `.snakefmt.toml`)                                                                                 |
 | **SSL_CERT_SECRET**                | `none`                          | SSL cert to add to the **Super-Linter** trust store. This is needed for users on `self-hosted` runners or need to inject the cert for security standards (ex. ${{ secrets.SSL_CERT }})                               |
+| **SSH_KEY**                        | `none`                          | SSH key that has access to your private repositories |
+| **SSH_SETUP_GITHUB**               | `false`                         | If set to `true`, adds the `github.com` SSH key to `known_hosts`. This is ignored if `SSH_KEY` is provided - i.e. the `github.com` SSH key is always added if `SSH_KEY` is provided |
+| **SSH_INSECURE_NO_VERIFY_GITHUB_KEY** | `false`                      | **INSECURE -** If set to `true`, does not verify the fingerprint of the github.com SSH key before adding this. This is not recommended! |
 | **SQL_CONFIG_FILE**                | `.sql-config.json`              | Filename for [SQL-Lint configuration](https://sql-lint.readthedocs.io/en/latest/files/configuration.html) (ex: `sql-config.json` , `.config.json`)                                                                   |
-| **TERRAFORM_TFLINT_CONFIG_FILE**   | `.tflint.hcl`                   | Filename for [tfLint configuration](https://github.com/terraform-linters/tflint) (ex: `.tflint.hcl`)                                                                                                                 |
+| **SQLFLUFF_CONFIG_FILE**                | `/.sqlfluff`             | Filename for [SQLFLUFF configuration](https://docs.sqlfluff.com/en/stable/configuration.html) (ex: `/.sqlfluff`, `pyproject.toml`)                                                                   |
+| **SUPPRESS_FILE_TYPE_WARN**        | `false`                         | If set to `true`, will hide warning messages about files without their proper extensions. Default is `false`                                                                                                         |
+| **SUPPRESS_POSSUM**                | `false`                         | If set to `true`, will hide the ASCII possum at top of log output. Default is `false`                                                                                                                                |
 | **TERRAFORM_TERRASCAN_CONFIG_FILE**| `terrascan.toml`                | Filename for [terrascan configuration](https://github.com/accurics/terrascan) (ex: `terrascan.toml`)                                                                                                                 |
-| **NATURAL_LANGUAGE_CONFIG_FILE**   | `.textlintrc`                   | Filename for [textlint configuration](https://textlint.github.io/docs/getting-started.html#configuration) (ex: `.textlintrc`)                                                                                        |
+| **TERRAFORM_TFLINT_CONFIG_FILE**   | `.tflint.hcl`                   | Filename for [tfLint configuration](https://github.com/terraform-linters/tflint) (ex: `.tflint.hcl`)                                                                                                                 |
+| **TYPESCRIPT_DEFAULT_STYLE**       | `standard`                      | Flag to set the default style of TypeScript. Available options: **standard**/**prettier**                                                                                                                            |
 | **TYPESCRIPT_ES_CONFIG_FILE**      | `.eslintrc.yml`                 | Filename for [ESLint configuration](https://eslint.org/docs/user-guide/configuring#configuration-file-formats) (ex: `.eslintrc.yml`, `.eslintrc.json`)                                                               |
 | **USE_FIND_ALGORITHM**             | `false`                         | By default, we use `git diff` to find all files in the workspace and what has been updated, this would enable the Linux `find` method instead to find all files to lint                                              |
 | **VALIDATE_ALL_CODEBASE**          | `true`                          | Will parse the entire repository and find all files to validate across all types. **NOTE:** When set to `false`, only **new** or **edited** files will be parsed for validation.                                     |
+| **VALIDATE_JSCPD_ALL_CODEBASE**    | `false`                         | If set to `true`, will lint the whole codebase with JSCPD, in addition to linting files with JSCPD one by one. If set to `false`, JSCPD will only lint files one by one.                                             |
 | **VALIDATE_ANSIBLE**               | `true`                          | Flag to enable or disable the linting process of the Ansible language.                                                                                                                                               |
 | **VALIDATE_ARM**                   | `true`                          | Flag to enable or disable the linting process of the ARM language.                                                                                                                                                   |
 | **VALIDATE_BASH**                  | `true`                          | Flag to enable or disable the linting process of the Bash language.                                                                                                                                                  |
@@ -331,13 +340,12 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **VALIDATE_CSHARP**                | `true`                          | Flag to enable or disable the linting process of the C# language.                                                                                                                                                    |
 | **VALIDATE_CSS**                   | `true`                          | Flag to enable or disable the linting process of the CSS language.                                                                                                                                                   |
 | **VALIDATE_DART**                  | `true`                          | Flag to enable or disable the linting process of the Dart language.                                                                                                                                                  |
-| **VALIDATE_DOCKERFILE**            | `true`                          | Flag to enable or disable the linting process of the Docker language.                                                                                                                                                |
 | **VALIDATE_DOCKERFILE_HADOLINT**   | `true`                          | Flag to enable or disable the linting process of the Docker language.                                                                                                                                                |
 | **VALIDATE_EDITORCONFIG**          | `true`                          | Flag to enable or disable the linting process with the EditorConfig.                                                                                                                                                 |
 | **VALIDATE_ENV**                   | `true`                          | Flag to enable or disable the linting process of the ENV language.                                                                                                                                                   |
+| **VALIDATE_GHERKIN**               | `true`                          | Flag to enable or disable the linting process of the Gherkin language.                                                                                                                                               |
 | **VALIDATE_GITHUB_ACTIONS**        | `true`                          | Flag to enable or disable the linting process of the GitHub Actions.                                                                                                                                                 |
 | **VALIDATE_GITLEAKS**              | `true`                          | Flag to enable or disable the linting process of the secrets.                                                                                                                                                        |
-| **VALIDATE_GHERKIN**               | `true`                          | Flag to enable or disable the linting process of the Gherkin language.                                                                                                                                               |
 | **VALIDATE_GO**                    | `true`                          | Flag to enable or disable the linting process of the Golang language.                                                                                                                                                |
 | **VALIDATE_GOOGLE_JAVA_FORMAT**    | `true`                          | Flag to enable or disable the linting process of the Java language. (Utilizing: google-java-format)                                                                                                                  |
 | **VALIDATE_GROOVY**                | `true`                          | Flag to enable or disable the linting process of the language.                                                                                                                                                       |
@@ -361,6 +369,7 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **VALIDATE_PHP_PHPCS**             | `true`                          | Flag to enable or disable the linting process of the PHP language. (Utilizing: PHP CodeSniffer)                                                                                                                      |
 | **VALIDATE_PHP_PHPSTAN**           | `true`                          | Flag to enable or disable the linting process of the PHP language. (Utilizing: PHPStan)                                                                                                                              |
 | **VALIDATE_PHP_PSALM**             | `true`                          | Flag to enable or disable the linting process of the PHP language. (Utilizing: PSalm)                                                                                                                                |
+| **VALIDATE_POWERSHELL**            | `true`                          | Flag to enable or disable the linting process of the Powershell language.                                                                                                                                            |
 | **VALIDATE_PROTOBUF**              | `true`                          | Flag to enable or disable the linting process of the Protobuf language.                                                                                                                                              |
 | **VALIDATE_PYTHON**                | `true`                          | Flag to enable or disable the linting process of the Python language. (Utilizing: pylint) (keep for backward compatibility)                                                                                          |
 | **VALIDATE_PYTHON_BLACK**          | `true`                          | Flag to enable or disable the linting process of the Python language. (Utilizing: black)                                                                                                                             |
@@ -368,12 +377,12 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **VALIDATE_PYTHON_ISORT**          | `true`                          | Flag to enable or disable the linting process of the Python language. (Utilizing: isort)                                                                                                                             |
 | **VALIDATE_PYTHON_MYPY**           | `true`                          | Flag to enable or disable the linting process of the Python language. (Utilizing: mypy)                                                                                                                              |
 | **VALIDATE_PYTHON_PYLINT**         | `true`                          | Flag to enable or disable the linting process of the Python language. (Utilizing: pylint)                                                                                                                            |
-| **VALIDATE_POWERSHELL**            | `true`                          | Flag to enable or disable the linting process of the Powershell language.                                                                                                                                            |
 | **VALIDATE_R**                     | `true`                          | Flag to enable or disable the linting process of the R language.                                                                                                                                                     |
 | **VALIDATE_RAKU**                  | `true`                          | Flag to enable or disable the linting process of the Raku language.                                                                                                                                                  |
 | **VALIDATE_RUBY**                  | `true`                          | Flag to enable or disable the linting process of the Ruby language.                                                                                                                                                  |
 | **VALIDATE_RUST_2015**             | `true`                          | Flag to enable or disable the linting process of the Rust language. (edition: 2015)                                                                                                                                  |
 | **VALIDATE_RUST_2018**             | `true`                          | Flag to enable or disable the linting process of Rust language. (edition: 2018)                                                                                                                                      |
+| **VALIDATE_RUST_2021**             | `true`                          | Flag to enable or disable the linting process of Rust language. (edition: 2021)                                                                                                                                      |
 | **VALIDATE_RUST_CLIPPY**           | `true`                          | Flag to enable or disable the clippy linting process of Rust language.                                                                                                                                               |
 | **VALIDATE_SCALAFMT_LINT**         | `true`                          | Flag to enable or disable the linting process of Scala language. (Utilizing: scalafmt --test)                                                                                                                        |
 | **VALIDATE_SHELL_SHFMT**           | `true`                          | Flag to enable or disable the linting process of Shell scripts. (Utilizing: shfmt)                                                                                                                                   |
@@ -383,8 +392,8 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **VALIDATE_SQL**                   | `true`                          | Flag to enable or disable the linting process of the SQL language.                                                                                                                                                   |
 | **VALIDATE_SQLFLUFF**              | `true`                          | Flag to enable or disable the linting process of the SQL language. (Utilizing: sqlfuff)                                                                                                                              |
 | **VALIDATE_TEKTON**                | `true`                          | Flag to enable or disable the linting process of the Tekton language.                                                                                                                                                |
-| **VALIDATE_TERRAFORM_TFLINT**      | `true`                          | Flag to enable or disable the linting process of the Terraform language. (Utilizing tflint)                                                                                                                          |
 | **VALIDATE_TERRAFORM_TERRASCAN**   | `true`                          | Flag to enable or disable the linting process of the Terraform language for security related issues.                                                                                                                 |
+| **VALIDATE_TERRAFORM_TFLINT**      | `true`                          | Flag to enable or disable the linting process of the Terraform language. (Utilizing tflint)                                                                                                                          |
 | **VALIDATE_TERRAGRUNT**            | `true`                          | Flag to enable or disable the linting process for Terragrunt files.                                                                                                                                                  |
 | **VALIDATE_TSX**                   | `true`                          | Flag to enable or disable the linting process for tsx files (Utilizing: eslint)                                                                                                                                      |
 | **VALIDATE_TYPESCRIPT_ES**         | `true`                          | Flag to enable or disable the linting process of the TypeScript language. (Utilizing: eslint)                                                                                                                        |
@@ -392,6 +401,7 @@ But if you wish to select or exclude specific linters, we give you full control 
 | **VALIDATE_XML**                   | `true`                          | Flag to enable or disable the linting process of the XML language.                                                                                                                                                   |
 | **VALIDATE_YAML**                  | `true`                          | Flag to enable or disable the linting process of the YAML language.                                                                                                                                                  |
 | **YAML_CONFIG_FILE**               | `.yaml-lint.yml`                | Filename for [Yamllint configuration](https://yamllint.readthedocs.io/en/stable/configuration.html) (ex: `.yaml-lint.yml`, `.yamllint.yml`)                                                                          |
+| **YAML_ERROR_ON_WARNING**          | `false`                         | Flag to enable or disable the error on warning for Yamllint.                                                                                                                                                         |
 
 ### Template rules files
 
@@ -407,6 +417,76 @@ If your repository contains your own rules files that live outside of a `.github
 ### Disabling rules
 
 If you need to disable certain _rules_ and _functionality_, you can view [Disable Rules](https://github.com/gdcorp-action-public-forks/super-linter/blob/main/docs/disabling-linters.md)
+
+### Using your own SSH key
+
+If you need to add your own SSH key to the linter because of private dependencies, you can use the `SSH_KEY` environment
+variable. The value of that environment variable should be an SSH private key that has access to your private
+repositories.
+
+You should add this key as an [Encrypted Secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+and access it with the `secrets` parameter.
+
+Example workflow:
+
+```yml
+---
+#################################
+#################################
+## Super Linter GitHub Actions ##
+#################################
+#################################
+name: Lint Code Base
+
+#
+# Documentation:
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+#
+
+#############################
+# Start the job on all push #
+#############################
+on:
+  push:
+    branches-ignore: [master, main]
+    # Remove the line above to run when pushing to master
+  pull_request:
+    branches: [master, main]
+
+###############
+# Set the Job #
+###############
+jobs:
+  build:
+    # Name the Job
+    name: Lint Code Base
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    ##################
+    # Load all steps #
+    ##################
+    steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
+
+      ################################
+      # Run Linter against code base #
+      ################################
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+```
 
 ## Filter linted files
 
@@ -475,7 +555,7 @@ Once found, it will load the certificate contents to a file, and to the trust st
 
 ```yml
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
+  uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}

@@ -75,12 +75,10 @@ SUPER_LINTER_TEST_CONTINER_URL := ''
 DOCKERFILE := ''
 IMAGE := ''
 ifeq ($(IMAGE),slim)
-	SUPER_LINTER_TEST_CONTINER_URL := "ghcr.io/gdcorp-action-public-forks/super-linter:slim-test"
-	DOCKERFILE := "Dockerfile-slim"
+	SUPER_LINTER_TEST_CONTINER_URL := "ghcr.io/ gdcorp-action-public-fork/super-linter:slim-test"
 	IMAGE := "slim"
 else
-	SUPER_LINTER_TEST_CONTINER_URL := "ghcr.io/gdcorp-action-public-forks/super-linter:test"
-	DOCKERFILE := "Dockerfile"
+	SUPER_LINTER_TEST_CONTINER_URL := "ghcr.io/ gdcorp-action-public-fork/super-linter:test"
 	IMAGE := "standard"
 endif
 

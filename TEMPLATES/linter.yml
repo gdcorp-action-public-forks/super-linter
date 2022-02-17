@@ -8,7 +8,7 @@ name: Lint Code Base
 
 #
 # Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 #
 
 #############################
@@ -48,7 +48,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.27
+        uses: gdcorp-action-public-forks/super-linter@gdcorp-4.29
         env:
           VALIDATE_ALL_CODEBASE: false
           # Change to 'master' if your main branch differs
