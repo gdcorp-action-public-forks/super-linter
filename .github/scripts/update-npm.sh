@@ -23,7 +23,7 @@ if [[ $(git status --porcelain) ]]; then
   # Push changes to remote
   echo "Pushing changes to remote..."
   git add .
-  git commit -a -Ss -m "Update NPM dependencies"
+  git commit -a -m "Update NPM dependencies"
   # shellcheck disable=SC2154
   git checkout -b "npm_deps_${id}"
   # shellcheck disable=SC2154
@@ -31,6 +31,7 @@ if [[ $(git status --porcelain) ]]; then
 
   # Open pull request
   echo "Opening pull request..."
+  echo "${token}" | gh auth login --with-token
   gh pr create --title "Weekly NPM Updates" --body "Updates NPM dependencies" --base master --head "npm_deps_${id}"
 else
   echo "No changes to commit"

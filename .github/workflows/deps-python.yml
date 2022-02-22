@@ -1,4 +1,4 @@
-name: Update Deps - NPM
+name: Update Deps - Python
 on:
   schedule:
     # Sunday at 5:00pm
@@ -6,11 +6,12 @@ on:
   workflow_dispatch:
 jobs:
   update:
-    name: Update NPM Dependencies
+    name: Update Python Dependencies
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: ./.github/scripts/update-npm.sh
+      - run: ./.github/scripts/update-python.sh
         env:
           id: ${{ github.run_id }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          working_directory: ${{ github.workspace }}
