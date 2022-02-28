@@ -8,9 +8,11 @@ jobs:
   update:
     name: Update Python Dependencies
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-      - run: ./.github/scripts/update-python.sh
+      - name: Update Dependencies
+        run: ./.github/scripts/update-python.sh
         env:
           id: ${{ github.run_id }}
           token: ${{ secrets.GITHUB_TOKEN }}

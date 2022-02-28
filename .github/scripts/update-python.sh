@@ -33,15 +33,16 @@ for DEP_FILE in *.txt; do
   # Enable virtualenv
   virtualenv .
   # Activate virtualenv
+  # shellcheck disable=SC1091
   source bin/activate
   # Handle the ansibl-lint corner case
-  if [[ "$PACKAGE_NAME" == "ansible-lint" ]]; then
+  if [[ $PACKAGE_NAME == "ansible-lint" ]]; then
     pip install "ansible-lint[core]"
   else
     pip install "${PACKAGE_NAME}"
   fi
   # Generate an update requirements.txt
-  pip freeze > requirements.txt
+  pip freeze >requirements.txt
   # deactivate the python virtualenv
   deactivate
   # pop the stack
@@ -71,8 +72,9 @@ if [[ $(git status --porcelain) ]]; then
 
   # Open pull request
   echo "Opening pull request..."
+  # shellcheck disable=SC2154
   echo "${token}" | gh auth login --with-token
-  gh pr create --title "Weekly Python Updates" --body "Updates Python dependencies" --base master --head "python_deps_${id}"
+  gh pr create --title "Weekly Python Updates" --body "Updates Python dependencies" --base main --head "python_deps_${id}"
 else
   echo "No changes to commit"
 fi
