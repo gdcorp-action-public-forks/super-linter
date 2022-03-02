@@ -285,7 +285,10 @@ function LintCodebase() {
             TFLINT_SEEN_DIRS[${DIR_NAME}]='false'
           fi
 
-          terraform get 2>&1
+          (
+            cd "${DIR_NAME}" || exit
+            terraform get >/dev/null
+          )
         fi
 
         LINT_CMD=$(
