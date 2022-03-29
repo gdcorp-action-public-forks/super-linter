@@ -15,7 +15,7 @@ FROM dotenvlinter/dotenv-linter:3.2.0 as dotenv-linter
 FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
 FROM ghcr.io/terraform-linters/tflint-bundle:v0.34.1.2 as tflint
-FROM golangci/golangci-lint:v1.45.0 as golangci-lint
+FROM golangci/golangci-lint:v1.45.2 as golangci-lint
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
 FROM hashicorp/terraform:1.1.7 as terraform
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
@@ -24,12 +24,12 @@ FROM mvdan/shfmt:v3.4.3 as shfmt
 FROM rhysd/actionlint:1.6.10 as actionlint
 FROM scalameta/scalafmt:v3.4.3 as scalafmt
 FROM yoheimuta/protolint:v0.37.1 as protolint
-FROM zricethezav/gitleaks:v8.4.0 as gitleaks
+FROM zricethezav/gitleaks:v8.5.2 as gitleaks
 
 ##################
 # Get base image #
 ##################
-FROM python:3.10.3-alpine as base_image
+FROM python:3.10.4-alpine as base_image
 
 ################################
 # Set ARG values used in Build #
@@ -108,7 +108,7 @@ RUN npm config set package-lock true  \
 ##############################
 # Installs Perl dependencies #
 ##############################
-RUN curl --retry 5 --retry-delay 5 -sL https://cpanmin.us/ | perl - -nq --no-wget Perl::Critic \
+RUN curl --retry 5 --retry-delay 5 -sL https://cpanmin.us/ | perl - -nq --no-wget Perl::Critic Perl::Critic::Community \
     #######################
     # Installs ActionLint #
     #######################
@@ -286,7 +286,7 @@ RUN apk add --no-cache rakudo zef \
 ################################################################################
 # Grab small clean image to build python packages ##############################
 ################################################################################
-FROM python:3.10.3-alpine as python_builder
+FROM python:3.10.4-alpine as python_builder
 RUN apk add --no-cache bash g++ git libffi-dev
 COPY dependencies/python/ /stage
 WORKDIR /stage
@@ -295,7 +295,7 @@ RUN ./build-venvs.sh
 ################################################################################
 # Grab small clean image to build final_slim ###################################
 ################################################################################
-FROM alpine:3.15.1 as final_slim
+FROM alpine:3.15.2 as final_slim
 
 ############################
 # Get the build arguements #
