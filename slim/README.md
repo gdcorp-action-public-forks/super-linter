@@ -2,8 +2,8 @@
 
 The **GitHub Super-Linter** maintains `two` major images:
 
-- `gdcorp-action-public-forks/super-linter:gdcorp-4.29`
-- `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.29`
+- `gdcorp-action-public-forks/super-linter:7cf9265a98d5b34a7cef84ef48402e71edb5bde5`
+- `gdcorp-action-public-forks/super-linter/slim:7cf9265a98d5b34a7cef84ef48402e71edb5bde5`
 
 In order to help users pull this image more naturally, the `action.yml` in this directory can help users pull the `slim image`.
 
@@ -26,7 +26,7 @@ Example usage:
 # Run Linter against code base #
 ################################
 - name: Lint Code Base
-  uses: gdcorp-action-public-forks/super-linter/slim@gdcorp-4.29
+  uses: gdcorp-action-public-forks/super-linter/slim@7cf9265a98d5b34a7cef84ef48402e71edb5bde5
   env:
     VALIDATE_ALL_CODEBASE: false
     DEFAULT_BRANCH: main
