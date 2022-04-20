@@ -84,6 +84,8 @@ function BuildFileList() {
     # Switch codebase back to the default branch to get a list of all files changed #
     #################################################################################
     SWITCH_CMD=$(
+      git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+      git config --global --add safe.directory "/tmp/lint"
       git -C "${GITHUB_WORKSPACE}" pull --quiet
       git -C "${GITHUB_WORKSPACE}" checkout "${DEFAULT_BRANCH}" 2>&1
     )
@@ -243,6 +245,16 @@ function BuildFileList() {
   done
   debug "---------------------------------------------"
 
+  #########################################
+  # Check if the Ansible directory exists #
+  #########################################
+  if [ -d "${ANSIBLE_DIRECTORY}" ]; then
+    debug "Adding ANSIBLE_DIRECTORY (${ANSIBLE_DIRECTORY}) to the list of files and directories to lint."
+    FILE_ARRAY_ANSIBLE+=("${ANSIBLE_DIRECTORY}")
+  else
+    debug "ANSIBLE_DIRECTORY (${ANSIBLE_DIRECTORY}) does NOT exist."
+  fi
+
   ################################################
   # Iterate through the array of all files found #
   ################################################
@@ -316,8 +328,13 @@ function BuildFileList() {
 
     # Editorconfig-checker should check every file
     FILE_ARRAY_EDITORCONFIG+=("${FILE}")
-    # jscpd also runs an all files
-    FILE_ARRAY_JSCPD+=("${FILE}")
+
+    if [ "${VALIDATE_JSCPD_ALL_CODEBASE}" == "true" ]; then
+      debug "Not adding ${FILE} to FILE_ARRAY_JSCPD because we're going to lint the whole codebase anyway."
+    else
+      # jscpd also runs an all files
+      FILE_ARRAY_JSCPD+=("${FILE}")
+    fi
     # Need to make sure we dont check the secrets paterns
     # for secrets, as it will pop!
     if [ "${BASE_FILE}" != ".gitleaks.toml" ]; then
@@ -494,15 +511,6 @@ function BuildFileList() {
       FILE_ARRAY_JSON+=("${FILE}")
 
       ############################
-      # Check if file is Ansible #
-      ############################
-      if DetectAnsibleFile "${ANSIBLE_DIRECTORY}" "${FILE}"; then
-        ################################
-        # Append the file to the array #
-        ################################
-        FILE_ARRAY_ANSIBLE+=("${FILE}")
-      fi
-      ############################
       # Check if file is OpenAPI #
       ############################
       if DetectOpenAPIFile "${FILE}"; then
@@ -556,6 +564,7 @@ function BuildFileList() {
       # Append the file to the array #
       ################################
       FILE_ARRAY_KOTLIN+=("${FILE}")
+      FILE_ARRAY_KOTLIN_ANDROID+=("${FILE}")
 
     #####################
     # Get the LUA files #
@@ -787,19 +796,6 @@ function BuildFileList() {
         # Append the file to the array #
         ################################
         FILE_ARRAY_GITHUB_ACTIONS+=("${FILE}")
-      fi
-      ############################
-      # Check if file is Ansible #
-      ############################
-      if [ -d "${ANSIBLE_DIRECTORY}" ]; then
-        if DetectAnsibleFile "${ANSIBLE_DIRECTORY}" "${FILE}"; then
-          ################################
-          # Append the file to the array #
-          ################################
-          FILE_ARRAY_ANSIBLE+=("${FILE}")
-        fi
-      else
-        debug "ANSIBLE_DIRECTORY (${ANSIBLE_DIRECTORY}) does NOT exist."
       fi
 
       #####################################
