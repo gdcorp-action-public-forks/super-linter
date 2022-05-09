@@ -14,8 +14,8 @@ FROM cljkondo/clj-kondo:2022.03.09-alpine as clj-kondo
 FROM dotenvlinter/dotenv-linter:3.2.0 as dotenv-linter
 FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
-FROM ghcr.io/terraform-linters/tflint-bundle:v0.35.0.1 as tflint
-FROM golangci/golangci-lint:v1.45.2 as golangci-lint
+FROM ghcr.io/terraform-linters/tflint-bundle:v0.36.2.0 as tflint
+FROM golangci/golangci-lint:v1.46.0 as golangci-lint
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
 FROM hashicorp/terraform:1.1.9 as terraform
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
@@ -23,7 +23,7 @@ FROM mstruebing/editorconfig-checker:2.4.0 as editorconfig-checker
 FROM mvdan/shfmt:v3.4.3 as shfmt
 FROM rhysd/actionlint:1.6.12 as actionlint
 FROM scalameta/scalafmt:v3.5.2 as scalafmt
-FROM yoheimuta/protolint:v0.37.1 as protolint
+FROM yoheimuta/protolint:v0.38.1 as protolint
 FROM zricethezav/gitleaks:v8.8.4 as gitleaks
 
 ##################
@@ -244,19 +244,14 @@ RUN apk add --no-cache rakudo zef \
     ######################
     # Install CheckStyle #
     ######################
-    && CHECKSTYLE_LATEST=$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest \
-    | grep browser_download_url \
-    | grep ".jar" \
-    | cut -d '"' -f 4) \
-    && curl --retry 5 --retry-delay 5 -sSL "$CHECKSTYLE_LATEST" \
+    && curl --retry 5 --retry-delay 5 -sSL \
+    "$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest | jq -r '.assets[0].browser_download_url')" \
     --output /usr/bin/checkstyle \
     ##############################
     # Install google-java-format #
     ##############################
-    && GOOGLE_JAVA_FORMAT_VERSION=$(curl -s https://github.com/google/google-java-format/releases/latest \
-    | cut -d '"' -f 2 | cut -d '/' -f 8 | sed -e 's/v//g') \
     && curl --retry 5 --retry-delay 5 -sSL \
-    "https://github.com/google/google-java-format/releases/download/v$GOOGLE_JAVA_FORMAT_VERSION/google-java-format-$GOOGLE_JAVA_FORMAT_VERSION-all-deps.jar" \
+    "$(curl -s https://api.github.com/repos/google/google-java-format/releases/latest | jq -r '.assets | .[] | select(.browser_download_url | contains("all-deps.jar")) | .browser_download_url')" \
     --output /usr/bin/google-java-format \
     #################################
     # Install luacheck and luarocks #
