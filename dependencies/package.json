@@ -3,7 +3,7 @@
   "dependencies": {
     "@coffeelint/cli": "^5.2.9",
     "@stoplight/spectral": "^6.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^4.33.0",
     "asl-validator": "^2.0.0",
     "axios": "^0.27.2",
