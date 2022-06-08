@@ -22,7 +22,7 @@ pyparsing==3.0.9
 pyrsistent==0.18.1
 pytest==7.1.2
 PyYAML==6.0
-resolvelib==0.5.4
+resolvelib==0.8.1
 rich==12.4.4
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
