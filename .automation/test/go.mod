@@ -3,7 +3,7 @@ module github.com/github/super-linter
 go 1.17
 
 require (
-	github.com/go-playground/validator/v10 v10.10.1
+	github.com/go-playground/validator/v10 v10.11.0
 	github.com/labstack/echo/v4 v4.7.2
 )
 
