@@ -11,4 +11,9 @@
     <option name="customVMPath" />
     <option name="maximumHeapSize" value="4096" />
   </component>
+  <component name="SwUserDefinedSpecifications">
+    <option name="specTypeByUrl">
+      <map />
+    </option>
+  </component>
 </project>

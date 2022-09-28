@@ -7,29 +7,28 @@
 #########################################
 # Get dependency images as build stages #
 #########################################
-FROM accurics/terrascan:1.14.0 as terrascan
-FROM alpine/terragrunt:1.1.8 as terragrunt
+FROM alpine/terragrunt:1.3.0 as terragrunt
+FROM tenable/terrascan:1.15.2 as terrascan
 FROM assignuser/chktex-alpine:v0.1.1 as chktex
 FROM cljkondo/clj-kondo:2022.03.09-alpine as clj-kondo
 FROM dotenvlinter/dotenv-linter:3.2.0 as dotenv-linter
-FROM garethr/kubeval:0.15.0 as kubeval
 FROM ghcr.io/awkbar-devops/clang-format:v1.0.2 as clang-format
-FROM ghcr.io/terraform-linters/tflint-bundle:v0.35.0.0 as tflint
-FROM golangci/golangci-lint:v1.45.2 as golangci-lint
+FROM ghcr.io/terraform-linters/tflint-bundle:v0.41.0.0 as tflint
+FROM golangci/golangci-lint:v1.49.0 as golangci-lint
 FROM hadolint/hadolint:latest-alpine as dockerfile-lint
-FROM hashicorp/terraform:1.1.8 as terraform
+FROM hashicorp/terraform:1.3.0 as terraform
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
 FROM mstruebing/editorconfig-checker:2.4.0 as editorconfig-checker
-FROM mvdan/shfmt:v3.4.3 as shfmt
-FROM rhysd/actionlint:1.6.11 as actionlint
-FROM scalameta/scalafmt:v3.5.1 as scalafmt
-FROM yoheimuta/protolint:v0.37.1 as protolint
-FROM zricethezav/gitleaks:v8.6.1 as gitleaks
+FROM mvdan/shfmt:v3.5.1 as shfmt
+FROM rhysd/actionlint:1.6.19 as actionlint
+FROM scalameta/scalafmt:v3.5.9 as scalafmt
+FROM yoheimuta/protolint:0.41.0 as protolint
+FROM zricethezav/gitleaks:v8.13.0 as gitleaks
 
 ##################
 # Get base image #
 ##################
-FROM python:3.10.4-alpine as base_image
+FROM python:3.10.7-alpine as base_image
 
 ################################
 # Set ARG values used in Build #
@@ -38,15 +37,20 @@ FROM python:3.10.4-alpine as base_image
 ARG ARM_TTK_NAME='master.zip'
 ARG ARM_TTK_URI='https://github.com/Azure/arm-ttk/archive/master.zip'
 ARG ARM_TTK_DIRECTORY='/usr/lib/microsoft'
+ARG CHECKSTYLE_VERSION='10.3.4'
 # Dart Linter
 ## stable dart sdk: https://dart.dev/get-dart#release-channels
 ARG DART_VERSION='2.8.4'
+ARG GOOGLE_JAVA_FORMAT_VERSION='1.15.0'
 ## install alpine-pkg-glibc (glibc compatibility layer package for Alpine Linux)
 ARG GLIBC_VERSION='2.31-r0'
+ARG KTLINT_VERSION='0.47.1'
 # PowerShell & PSScriptAnalyzer linter
 ARG PSSA_VERSION='latest'
 ARG PWSH_DIRECTORY='/usr/lib/microsoft/powershell'
 ARG PWSH_VERSION='latest'
+# Kubeval Version
+ARG KUBEVAL_VERSION='v0.16.1'
 
 ####################
 # Run APK installs #
@@ -80,7 +84,8 @@ RUN apk add --no-cache \
     openssh-client \
     openssl-dev \
     perl perl-dev \
-    py3-setuptools python3-dev \
+    py3-setuptools python3-dev  \
+    py3-pyflakes \
     R R-dev R-doc \
     readline-dev \
     ruby ruby-dev ruby-bundler ruby-rdoc \
@@ -107,15 +112,7 @@ RUN npm config set package-lock true  \
 ##############################
 # Installs Perl dependencies #
 ##############################
-RUN curl --retry 5 --retry-delay 5 -sL https://cpanmin.us/ | perl - -nq --no-wget Perl::Critic Perl::Critic::Community \
-    #######################
-    # Installs ActionLint #
-    #######################
-    && curl --retry 5 --retry-delay 5 -sLO https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash \
-    && chmod +x download-actionlint.bash \
-    && ./download-actionlint.bash \
-    && rm download-actionlint.bash \
-    && mv actionlint /usr/bin/actionlint
+RUN curl --retry 5 --retry-delay 5 -sL https://cpanmin.us/ | perl - -nq --no-wget Perl::Critic Perl::Critic::Community
 
 ######################
 # Install shellcheck #
@@ -173,11 +170,6 @@ COPY --from=dockerfile-lint /bin/hadolint /usr/bin/hadolint
 ##################
 COPY --from=chktex /usr/bin/chktex /usr/bin/
 
-###################
-# Install kubeval #
-###################
-COPY --from=kubeval /kubeval /usr/bin/
-
 #################
 # Install shfmt #
 #################
@@ -211,10 +203,21 @@ RUN mkdir -p /home/r-library \
     && Rscript -e "install.packages(c('lintr','purrr'), repos = 'https://cloud.r-project.org/')" \
     && R -e "install.packages(list.dirs('/home/r-library',recursive = FALSE), repos = NULL, type = 'source')"
 
-##################
-# Install ktlint #
-##################
-RUN curl --retry 5 --retry-delay 5 -sSLO https://github.com/pinterest/ktlint/releases/latest/download/ktlint \
+# Source: https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+# Store the key here because the above host is sometimes down, and breaks our builds
+COPY dependencies/sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
+
+###################
+# Install Kubeval #
+###################
+RUN wget --tries=5 -q -O kubeval-linux-amd64.tar.gz https://github.com/instrumenta/kubeval/releases/download/${KUBEVAL_VERSION}/kubeval-linux-amd64.tar.gz \
+    && tar xf kubeval-linux-amd64.tar.gz \
+    && mv kubeval /usr/local/bin \
+    && rm kubeval-linux-amd64.tar.gz \
+    ##################
+    # Install ktlint #
+    ##################
+    && curl --retry 5 --retry-delay 5 -sSLO "https://github.com/pinterest/ktlint/releases/download/${KTLINT_VERSION}/ktlint" \
     && chmod a+x ktlint \
     && mv "ktlint" /usr/bin/ \
     && terrascan init \
@@ -222,7 +225,6 @@ RUN curl --retry 5 --retry-delay 5 -sSLO https://github.com/pinterest/ktlint/rel
     ####################
     # Install dart-sdk #
     ####################
-    && wget --tries=5 -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
     && wget --tries=5 -q https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && apk add --no-cache glibc-${GLIBC_VERSION}.apk \
     && rm glibc-${GLIBC_VERSION}.apk \
@@ -244,19 +246,12 @@ RUN apk add --no-cache rakudo zef \
     ######################
     # Install CheckStyle #
     ######################
-    && CHECKSTYLE_LATEST=$(curl -s https://api.github.com/repos/checkstyle/checkstyle/releases/latest \
-    | grep browser_download_url \
-    | grep ".jar" \
-    | cut -d '"' -f 4) \
-    && curl --retry 5 --retry-delay 5 -sSL "$CHECKSTYLE_LATEST" \
+    && curl --retry 5 --retry-delay 5 --show-error -sSL "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar" \
     --output /usr/bin/checkstyle \
     ##############################
     # Install google-java-format #
     ##############################
-    && GOOGLE_JAVA_FORMAT_VERSION=$(curl -s https://github.com/google/google-java-format/releases/latest \
-    | cut -d '"' -f 2 | cut -d '/' -f 8 | sed -e 's/v//g') \
-    && curl --retry 5 --retry-delay 5 -sSL \
-    "https://github.com/google/google-java-format/releases/download/v$GOOGLE_JAVA_FORMAT_VERSION/google-java-format-$GOOGLE_JAVA_FORMAT_VERSION-all-deps.jar" \
+    && curl --retry 5 --retry-delay 5 --show-error -sSL "https://github.com/google/google-java-format/releases/download/v${GOOGLE_JAVA_FORMAT_VERSION}/google-java-format-${GOOGLE_JAVA_FORMAT_VERSION}-all-deps.jar" \
     --output /usr/bin/google-java-format \
     #################################
     # Install luacheck and luarocks #
@@ -285,7 +280,7 @@ RUN apk add --no-cache rakudo zef \
 ################################################################################
 # Grab small clean image to build python packages ##############################
 ################################################################################
-FROM python:3.10.4-alpine as python_builder
+FROM python:3.10.7-alpine as python_builder
 RUN apk add --no-cache bash g++ git libffi-dev
 COPY dependencies/python/ /stage
 WORKDIR /stage
@@ -331,11 +326,14 @@ ENV BUILD_REVISION=$BUILD_REVISION
 ENV BUILD_VERSION=$BUILD_VERSION
 ENV IMAGE="slim"
 
+# Source: https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+# Store the key here because the above host is sometimes down, and breaks our builds
+COPY dependencies/sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
+
 ######################################
 # Install Phive dependencies and git #
 ######################################
-RUN wget --tries=5 -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget --tries=5 -q https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
+RUN wget --tries=5 -q https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && apk add --no-cache \
     bash \
     ca-certificates \
@@ -381,10 +379,15 @@ COPY --from=base_image /home/r-library /home/r-library
 COPY --from=base_image /root/.tflint.d/ /root/.tflint.d/
 COPY --from=python_builder /venvs/ /venvs/
 
+##################################
+# Configure TFLint plugin folder #
+##################################
+ENV TFLINT_PLUGIN_DIR="/root/.tflint.d/plugins"
+
 ####################################################
 # Install Composer after all Libs have been copied #
 ####################################################
-RUN sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer'
+RUN sh -c 'curl --retry 5 --retry-delay 5 --show-error -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer'
 
 ########################################
 # Add node packages to path and dotnet #
@@ -498,7 +501,7 @@ RUN ln -s /usr/bin/rustup-init /usr/bin/rustup \
 # Slightly modified to always retrieve latest stable Powershell version
 # If changing PWSH_VERSION='latest' to a specific version, use format PWSH_VERSION='tags/v7.0.2'
 RUN mkdir -p ${PWSH_DIRECTORY} \
-    && curl --retry 5 --retry-delay 5 -s https://api.github.com/repos/powershell/powershell/releases/${PWSH_VERSION} \
+    && curl --retry 5 --retry-delay 5 --show-error -s https://api.github.com/repos/powershell/powershell/releases/${PWSH_VERSION} \
     | grep browser_download_url \
     | grep linux-alpine-x64 \
     | cut -d '"' -f 4 \
@@ -514,7 +517,7 @@ RUN mkdir -p ${PWSH_DIRECTORY} \
 # Reference https://github.com/Azure/arm-ttk
 # Reference https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/test-toolkit
 ENV ARM_TTK_PSD1="${ARM_TTK_DIRECTORY}/arm-ttk-master/arm-ttk/arm-ttk.psd1"
-RUN curl --retry 5 --retry-delay 5 -sLO "${ARM_TTK_URI}" \
+RUN curl --retry 5 --retry-delay 5 --show-error -sLO "${ARM_TTK_URI}" \
     && unzip "${ARM_TTK_NAME}" -d "${ARM_TTK_DIRECTORY}" \
     && rm "${ARM_TTK_NAME}" \
     && ln -sTf "${ARM_TTK_PSD1}" /usr/bin/arm-ttk

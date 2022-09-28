@@ -132,6 +132,8 @@ LATEX_FILE_NAME=".chktexrc"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
 LUA_FILE_NAME=".luacheckrc"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
+LOCAL_UPDATES="${LOCAL_UPDATES:-false}"
+# shellcheck disable=SC2034  # Variable is referenced indirectly
 MARKDOWN_FILE_NAME="${MARKDOWN_CONFIG_FILE:-.markdown-lint.yml}"
 # shellcheck disable=SC2034  # Variable is referenced indirectly
 OPENAPI_FILE_NAME=".openapirc.yml"
@@ -353,7 +355,6 @@ DEFAULT_BRANCH="${DEFAULT_BRANCH:-master}" # Default Git Branch to use (master b
 # GITHUB_REPOSITORY="${GITHUB_REPOSITORY}"         # GitHub Org/Repo passed from system
 # GITHUB_RUN_ID="${GITHUB_RUN_ID}"                 # GitHub RUn ID to point to logs
 # GITHUB_SHA="${GITHUB_SHA}"                       # GitHub sha from the commit
-# GITHUB_TOKEN="${GITHUB_TOKEN}"                   # GitHub Token passed from environment
 # GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"           # Github Workspace
 # TEST_CASE_RUN="${TEST_CASE_RUN}"                 # Boolean to validate only test cases
 # VALIDATE_ALL_CODEBASE="${VALIDATE_ALL_CODEBASE}" # Boolean to validate all files
@@ -652,7 +653,7 @@ CallStatusAPI() {
     # Call the status API to create status check #
     ##############################################
     SEND_STATUS_CMD=$(
-      curl -f -s -X POST \
+      curl -f -s --show-error -X POST \
         --url "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
         -H 'accept: application/vnd.github.v3+json' \
         -H "authorization: Bearer ${GITHUB_TOKEN}" \
@@ -852,11 +853,6 @@ export DEFAULT_TEST_CASE_ANSIBLE_DIRECTORY                                      
 ############################
 GetValidationInfo
 
-# Now ANSIBLE_DIRECTORY is set
-ANSIBLE_ROLES_PATH="${ANSIBLE_ROLES_PATH:-"${ANSIBLE_DIRECTORY}/roles"}"
-debug "Setting ANSIBLE_ROLES_PATH to: ${ANSIBLE_ROLES_PATH}..."
-export ANSIBLE_ROLES_PATH
-
 #################################
 # Get the linter rules location #
 #################################
@@ -898,7 +894,7 @@ LINTER_COMMANDS_ARRAY['ENV']="dotenv-linter"
 LINTER_COMMANDS_ARRAY['GITHUB_ACTIONS']="actionlint -config-file ${GITHUB_ACTIONS_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['GITLEAKS']="gitleaks detect --no-git -c ${GITLEAKS_LINTER_RULES} -v -s"
 LINTER_COMMANDS_ARRAY['GHERKIN']="gherkin-lint -c ${GHERKIN_LINTER_RULES}"
-LINTER_COMMANDS_ARRAY['GO']="golangci-lint run -c ${GO_LINTER_RULES}"
+LINTER_COMMANDS_ARRAY['GO']="golangci-lint run --fast -c ${GO_LINTER_RULES}"
 LINTER_COMMANDS_ARRAY['GOOGLE_JAVA_FORMAT']="java -jar /usr/bin/google-java-format"
 LINTER_COMMANDS_ARRAY['GROOVY']="npm-groovy-lint -c ${GROOVY_LINTER_RULES} --failon warning --no-insight"
 LINTER_COMMANDS_ARRAY['HTML']="htmlhint --config ${HTML_LINTER_RULES}"
@@ -950,7 +946,7 @@ LINTER_COMMANDS_ARRAY['PYTHON_ISORT']="isort --check --diff --sp ${PYTHON_ISORT_
 LINTER_COMMANDS_ARRAY['PYTHON_MYPY']="mypy --config-file ${PYTHON_MYPY_LINTER_RULES} --install-types --non-interactive"
 LINTER_COMMANDS_ARRAY['R']="lintr"
 LINTER_COMMANDS_ARRAY['RAKU']="raku"
-LINTER_COMMANDS_ARRAY['RUBY']="rubocop -c ${RUBY_LINTER_RULES} --force-exclusion"
+LINTER_COMMANDS_ARRAY['RUBY']="rubocop -c ${RUBY_LINTER_RULES} --force-exclusion --ignore-unrecognized-cops"
 LINTER_COMMANDS_ARRAY['RUST_2015']="rustfmt --check --edition 2015"
 LINTER_COMMANDS_ARRAY['RUST_2018']="rustfmt --check --edition 2018"
 LINTER_COMMANDS_ARRAY['RUST_2021']="rustfmt --check --edition 2021"

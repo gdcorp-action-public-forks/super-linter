@@ -194,10 +194,12 @@ function LintCodebase() {
       # Check for ansible #
       #####################
       if [[ ${FILE_TYPE} == "ANSIBLE" ]]; then
+        debug "ANSIBLE_DIRECTORY: ${ANSIBLE_DIRECTORY}, LINTER_COMMAND:${LINTER_COMMAND}, FILE: ${FILE}"
         LINT_CMD=$(
-          debug "ANSIBLE_ROLES_PATH: ${ANSIBLE_ROLES_PATH}, LINTER_COMMAND:${LINTER_COMMAND}, FILE: ${FILE}"
-          cd "${WORKSPACE_PATH}" || exit
-          ANSIBLE_ROLES_PATH=${ANSIBLE_ROLES_PATH} ${LINTER_COMMAND} "${FILE}" 2>&1
+          cd "${ANSIBLE_DIRECTORY}" || exit
+          # Don't pass the file to lint to enable ansible-lint autodetection mode.
+          # See https://ansible-lint.readthedocs.io/usage for details
+          ${LINTER_COMMAND} 2>&1
         )
       ####################################
       # Corner case for pwsh subshell    #
@@ -213,17 +215,6 @@ function LintCodebase() {
           cd "${WORKSPACE_PATH}" || exit
           pwsh -NoProfile -NoLogo -Command "${LINTER_COMMAND} \"${FILE}\"; if (\${Error}.Count) { exit 1 }"
           exit $? 2>&1
-        )
-      ###############################################################################
-      # Corner case for groovy as we have to pass it as path and file in ant format #
-      ###############################################################################
-      elif [[ ${FILE_TYPE} == "GROOVY" ]]; then
-        #######################################
-        # Lint the file with the updated path #
-        #######################################
-        LINT_CMD=$(
-          cd "${WORKSPACE_PATH}" || exit
-          ${LINTER_COMMAND} --path "${DIR_NAME}" --files "$FILE_NAME" 2>&1
         )
       ###############################################################################
       # Corner case for R as we have to pass it to R                                #
