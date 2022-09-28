@@ -9,7 +9,7 @@ In order to help users pull this image more naturally, the `action.yml` in this 
 
 ## Slim Image
 
-The slim `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.29` comes with all supported linters but removes the following:
+The slim `gdcorp-action-public-forks/super-linter:slim-gdcorp-4.41` comes with all supported linters but removes the following:
 
 - `rust` linters
 - `dotenv` linters
