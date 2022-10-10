@@ -45,14 +45,30 @@ jobs:
       - name: Get current release identifier
         # shellcheck disable=SC2062
         run: |
-          echo "RELEASE_VERSION=$(echo ${{ github.event.release.name }} \
-          | grep -E -o "v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+")" \
-          >> "${GITHUB_ENV}"
+          RELESE_VERSION="${{ github.event.release.name }}"
+
           if [ -z "${RELEASE_VERSION}" ]; then
             echo "No release version found in environment, using input..."
-            echo "RELEASE_VERSION=${{ github.event.inputs.release_version }}" \
-            >> "${GITHUB_ENV}"
+            RELEASE_VERSION="${{ github.event.inputs.release_version }}"
           fi
+
+          # Check the RELEASE_VERSION again
+          if [ -z "${RELEASE_VERSION}" ]; then
+            echo "Error RELEASE_VERSION is empty. Exiting..."
+            exit 1
+          fi
+
+          if ! echo "${RELEASE_VERSION}" | grep -E -o "v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"; then
+            echo "Error: RELEASE_VERSION doesn't look like a semantic version: ${RELEASE_VERSION}"
+            exit 2
+          fi
+
+          {
+            echo "RELEASE_VERSION=${RELESE_VERSION}"
+            echo "SEMVER_VERSION=${RELEASE_VERSION#v}"
+            echo "SEMVER_MAJOR_VERSION=${SEMVER_VERSION%%.*}"
+            echo "SEMVER_MAJOR_VERSION_WITH_PREFIX=v${SEMVER_MAJOR_VERSION}"
+          } >> "${GITHUB_ENV}"
 
       - name: Start deployment for the ${{ matrix.images.deployment-environment-identifier }} environment
         uses: bobheadxi/deployments@v1.3.0
@@ -73,6 +89,22 @@ jobs:
             github/super-linter:${{ matrix.images.container-image-id-prefix }}${{ env.RELEASE_VERSION }}
             ghcr.io/github/super-linter:${{ matrix.images.container-image-id-prefix }}v4
             ghcr.io/github/super-linter:${{ matrix.images.container-image-id-prefix }}${{ env.RELEASE_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # Full git history is needed to get a proper list of commits and tags
+          fetch-depth: 0
+
+      # We use ^{} to recursively deference the tag to get the commit the tag is pointing at.
+      # Then, we use that reference to create new tags, so that the new tags point to the commit
+      # the original tag was pointing to, and not to the original tag.
+      # This notation is documented at https://git-scm.com/docs/gitrevisions#Documentation/gitrevisions.txt-emltrevgtemegemv0998em
+      - name: Update the major version and latest tags
+        run: |
+          git tag --force "${SEMVER_MAJOR_VERSION_WITH_PREFIX}" "${RELEASE_VERSION}^{}"
+          git tag --force latest "${RELEASE_VERSION}^{}"
+          git push --force origin "refs/tags/${SEMVER_MAJOR_VERSION_WITH_PREFIX}" "refs/tags/latest"
 
       - name: Update the deployment status for the ${{ matrix.images.deployment-environment-identifier }} environment
         uses: bobheadxi/deployments@v1.3.0

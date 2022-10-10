@@ -35,7 +35,6 @@ It is a simple combination of various linters, written in `bash`, to help valida
     - [GitLab](#gitlab)
     - [Codespaces and Visual Studio Code](#codespaces-and-visual-studio-code)
     - [SSL Certs](#ssl-certs)
-  - [Community Activity](#community-activity)
   - [Limitations](#limitations)
   - [How to contribute](#how-to-contribute)
     - [License](#license)
@@ -85,14 +84,14 @@ Developers on **GitHub** can call the **GitHub Action** to lint their codebase w
 | **PHP**                                 | [PHP built-in linter](https://www.php.net/) / [PHP CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) / [PHPStan](https://phpstan.org/) / [Psalm](https://psalm.dev/) |
 | **PowerShell**                          | [PSScriptAnalyzer](https://github.com/PowerShell/Psscriptanalyzer)                                                                                                            |
 | **Protocol Buffers**                    | [protolint](https://github.com/yoheimuta/protolint)                                                                                                                           |
-| **Python3**                             | [pylint](https://www.pylint.org/) / [flake8](https://flake8.pycqa.org/en/latest/) / [black](https://github.com/psf/black) / [isort](https://pypi.org/project/isort/)          |
+| **Python3**                             | [pylint](https://pylint.pycqa.org/) / [flake8](https://flake8.pycqa.org/en/latest/) / [black](https://github.com/psf/black) / [isort](https://pypi.org/project/isort/)        |
 | **R**                                   | [lintr](https://github.com/jimhester/lintr)                                                                                                                                   |
 | **Raku**                                | [Raku](https://raku.org)                                                                                                                                                      |
 | **Ruby**                                | [RuboCop](https://github.com/rubocop-hq/rubocop)                                                                                                                              |
 | **Rust**                                | [Rustfmt](https://github.com/rust-lang/rustfmt) / [Clippy](https://github.com/rust-lang/rust-clippy)                                                                          |
 | **Scala**                               | [scalafmt](https://github.com/scalameta/scalafmt)                                                                                                                             |
 | **Secrets**                             | [GitLeaks](https://github.com/zricethezav/gitleaks)                                                                                                                           |
-| **Shell**                               | [Shellcheck](https://github.com/koalaman/shellcheck) / [executable bit check] / [shfmt](https://github.com/mvdan/sh)                                                          |
+| **Shell**                               | [ShellCheck](https://github.com/koalaman/shellcheck) / [executable bit check] / [shfmt](https://github.com/mvdan/sh)                                                          |
 | **Snakemake**                           | [snakefmt](https://github.com/snakemake/snakefmt/) / [snakemake --lint](https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html#best-practices)         |
 | **SQL**                                 | [sql-lint](https://github.com/joereynolds/sql-lint) / [sqlfluff](https://github.com/sqlfluff/sqlfluff)                                                                        |
 | **Tekton**                              | [tekton-lint](https://github.com/IBM/tekton-lint)                                                                                                                             |
@@ -552,10 +551,6 @@ Once found, it will load the certificate contents to a file, and to the trust st
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SSL_CERT_SECRET: ${{ secrets.ROOT_CA }}
 ```
-
-## Community Activity
-
-![super-linter stats](https://cauldron.io/project/2083/stats.svg)
 
 ## Limitations
 
