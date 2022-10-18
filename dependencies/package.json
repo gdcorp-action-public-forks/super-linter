@@ -21,7 +21,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-vue": "^9.5.1",
+    "eslint-plugin-vue": "^9.6.0",
     "gherkin-lint": "^4.2.2",
     "htmlhint": "^1.1.4",
     "immer": "^9.0.15",
@@ -36,7 +36,7 @@
     "pug": "^3.0.2",
     "sql-lint": "1.0.0",
     "standard": "^17.0.0",
-    "stylelint": "^14.12.1",
+    "stylelint": "^14.13.0",
     "stylelint-config-recommended-scss": "^7.0.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-config-standard": "^28.0.0",
@@ -49,7 +49,7 @@
     "textlint-filter-rule-allowlist": "^4.0.0",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-terminology": "^3.0.3",
-    "ts-standard": "^11.0.0",
+    "ts-standard": "^12.0.1",
     "typescript": "^4.8.4"
   }
 }
